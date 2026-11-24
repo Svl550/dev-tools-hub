@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevToolkit Pro | Free Online Developer Utilities & Converters</title>
+  <meta name="description" content="Fast, secure, 100% in-browser developer utilities: JSON formatter, JSON to CSV converter, Base64 encoder, SHA256 hash generator, URL encoder, and UUID generator.">
+  <meta name="keywords" content="json formatter online, json to csv, base64 encoder decoder, sha256 generator, uuid generator, url encoder online, developer tools">
+  <meta property="og:title" content="DevToolkit Pro - Free Online Developer Utilities">
+  <meta property="og:description" content="Instant browser-side developer utilities with zero data storage. Fast, responsive, and private.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://svl550.github.io/dev-tools-hub/">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+          }
+        }
+      }
+    };
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "DevToolkit Pro",
+    "url": "https://svl550.github.io/dev-tools-hub/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "Free in-browser developer utilities including JSON formatting, CSV conversion, Base64 encoding, cryptographic hashing, and UUID generation."
+  }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">
+          &lt;/&gt;
+        </div>
+        <div>
+          <span class="text-lg font-bold tracking-tight text-white">DevToolkit<span class="text-blue-500">Pro</span></span>
+          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs rounded bg-blue-900/50 text-blue-300 border border-blue-700/50">100% Client-Side</span>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <a href="https://svl.gumroad.com/l/qzpfma" target="_blank" rel="noopener" class="hidden md:inline-flex items-center space-x-2 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 transition">
+          <span>⚡ Automation Suite CLI</span>
+        </a>
+        <a href="https://github.com/Svl550/awesome-automation-tools" target="_blank" rel="noopener" class="p-2 text-slate-400 hover:text-white transition" aria-label="GitHub">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Banner (Gumroad Upsell) -->
+  <div class="bg-gradient-to-r from-blue-900/60 via-indigo-900/60 to-purple-900/60 border-b border-blue-800/40 px-4 py-2 text-center text-xs text-slate-300">
+    Need to run these operations programmatically in your pipeline? Check our 
+    <a href="https://svl.gumroad.com/l/qzpfma" target="_blank" rel="noopener" class="font-semibold text-blue-400 hover:text-blue-300 underline underline-offset-2 ml-1">
+      Python Automation Master Suite (CLI & API) &rarr;
+    </a>
+  </div>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Sidebar / Tool Navigation -->
+    <aside class="lg:col-span-3">
+      <div class="sticky top-24 space-y-4">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 px-3">Developer Tools</h2>
+        <nav class="space-y-1" id="tool-nav">
+          <button data-target="tool-json" class="tool-tab-btn active w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+            <span class="text-blue-400">{ }</span>
+            <span>JSON Formatter & Validator</span>
+          </button>
+          <button data-target="tool-csv" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+            <span class="text-emerald-400">📊</span>
+            <span>JSON &harr; CSV Converter</span>
+          </button>
+          <button data-target="tool-base64" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+            <span class="text-amber-400">⚡</span>
+            <span>Base64 Encoder / Decoder</span>
+          </button>
+          <button data-target="tool-hash" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+            <span class="text-purple-400">🔒</span>
+            <span>Crypto Hash Generator</span>
+          </button>
+          <button data-target="tool-url" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+            <span class="text-cyan-400">🔗</span>
+            <span>URL & Slug Utility</span>
+          </button>
+          <button data-target="tool-uuid" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+            <span class="text-rose-400">🎲</span>
+            <span>UUID & Key Generator</span>
+          </button>
+        </nav>
+
+        <!-- Monetization Slot 1: Sponsor / Ad / Product Card -->
+        <div class="mt-8 p-4 rounded-xl border border-slate-800 bg-slate-900/60 text-xs text-slate-400 space-y-3">
+          <div class="flex items-center justify-between text-slate-500 font-mono text-[10px]">
+            <span>FEATURED SUITE</span>
+            <span>PRO</span>
+          </div>
+          <p class="text-slate-300 font-medium leading-relaxed">
+            Automate data scraping, PDF generation, SEO audits, and email verification with offline CLI scripts.
+          </p>
+          <a href="https://svl.gumroad.com" target="_blank" rel="noopener" class="block w-full py-2 px-3 text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition">
+            Explore All 10 Tools
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Tool Content -->
+    <section class="lg:col-span-9 space-y-6">
+
+      <!-- TOOL 1: JSON Formatter & Validator -->
+      <article id="tool-json" class="tool-card space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h1 class="text-xl font-bold text-white">JSON Formatter, Validator & Minifier</h1>
+            <p class="text-xs text-slate-400">Clean, validate, and minify messy JSON structures safely inside your browser.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button id="btn-json-format-2" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">2 Spaces</button>
+            <button id="btn-json-format-4" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">4 Spaces</button>
+            <button id="btn-json-minify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Minify</button>
+            <button id="btn-json-copy" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition">Copy</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Input JSON</label>
+            <textarea id="json-input" rows="16" placeholder='Paste your raw JSON here... e.g. {"name":"Arthur","tools":10}' class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 resize-y"></textarea>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-semibold text-slate-400">Formatted Output</label>
+              <span id="json-status" class="text-xs text-slate-500 font-mono">Ready</span>
+            </div>
+            <textarea id="json-output" readonly rows="16" placeholder="Formatted or minified output will appear here..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
+          </div>
+        </div>
+      </article>
+
+      <!-- TOOL 2: JSON <-> CSV Converter -->
+      <article id="tool-csv" class="tool-card hidden space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-xl font-bold text-white">JSON to CSV / CSV to JSON Converter</h2>
+            <p class="text-xs text-slate-400">Convert array data between JSON and CSV formats with live tabular preview.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button id="btn-to-csv" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition">Convert to CSV</button>
+            <button id="btn-to-json" class="px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded font-medium transition">Convert to JSON</button>
+            <button id="btn-download-csv" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Download File</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Input Data (JSON Array or Raw CSV)</label>
+            <textarea id="csv-input" rows="16" placeholder='[&#10;  {"id": 1, "product": "SpamShield", "price": 14},&#10;  {"id": 2, "product": "SEO Auditor", "price": 9}&#10;]' class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 resize-y"></textarea>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-semibold text-slate-400">Converted Result</label>
+              <button id="btn-copy-csv" class="text-xs text-blue-400 hover:text-blue-300">Copy output</button>
+            </div>
+            <textarea id="csv-output" readonly rows="16" placeholder="Result will appear here..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
+          </div>
+        </div>
+      </article>
+
+      <!-- TOOL 3: Base64 Encoder / Decoder -->
+      <article id="tool-base64" class="tool-card hidden space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-xl font-bold text-white">Base64 Encoder & Decoder</h2>
+            <p class="text-xs text-slate-400">Encode standard text into Base64 or decode Base64 back to readable text.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button id="btn-b64-encode" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition">Encode</button>
+            <button id="btn-b64-decode" class="px-3 py-1.5 text-xs bg-amber-600 hover:bg-amber-500 text-white rounded font-medium transition">Decode</button>
+            <button id="btn-b64-copy" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Copy</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Input Text</label>
+            <textarea id="b64-input" rows="14" placeholder="Enter text or base64 string..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 resize-y"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Output Result</label>
+            <textarea id="b64-output" readonly rows="14" placeholder="Encoded or decoded string..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
+          </div>
+        </div>
+      </article>
+
+      <!-- TOOL 4: Hash Generator -->
+      <article id="tool-hash" class="tool-card hidden space-y-4">
+        <div class="border-b border-slate-800 pb-3">
+          <h2 class="text-xl font-bold text-white">Cryptographic Hash Generator (SHA-256, SHA-512, SHA-1)</h2>
+          <p class="text-xs text-slate-400">Compute cryptographic checksums in real-time using standard Web Crypto primitives.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Input String</label>
+            <textarea id="hash-input" rows="3" placeholder="Type or paste any string to hash..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500"></textarea>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span class="font-semibold text-purple-400">SHA-256 (Standard)</span>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-sha256">Copy</button>
+              </div>
+              <input type="text" readonly id="out-sha256" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span class="font-semibold text-purple-400">SHA-512 (High Security)</span>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-sha512">Copy</button>
+              </div>
+              <input type="text" readonly id="out-sha512" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span class="font-semibold text-purple-400">SHA-1 (Legacy)</span>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-sha1">Copy</button>
+              </div>
+              <input type="text" readonly id="out-sha1" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- TOOL 5: URL & Slug Utility -->
+      <article id="tool-url" class="tool-card hidden space-y-4">
+        <div class="border-b border-slate-800 pb-3">
+          <h2 class="text-xl font-bold text-white">URL Encoder, Decoder & SEO Slug Generator</h2>
+          <p class="text-xs text-slate-400">Clean strings for web addresses, encode URI components, or build SEO-friendly slugs.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Input Text / URL</label>
+            <input type="text" id="url-input" placeholder="e.g. My Awesome Automation Tool #2026 / test?q=hello world" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono">
+          </div>
+
+          <div class="grid grid-cols-1 gap-3">
+            <div>
+              <div class="flex justify-between text-xs text-slate-400 mb-1">
+                <span class="font-semibold text-cyan-400">SEO URL Slug</span>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-slug">Copy</button>
+              </div>
+              <input type="text" readonly id="out-slug" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs text-slate-400 mb-1">
+                <span class="font-semibold text-cyan-400">encodeURIComponent (Safe Parameters)</span>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-url-encode">Copy</button>
+              </div>
+              <input type="text" readonly id="out-url-encode" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs text-slate-400 mb-1">
+                <span class="font-semibold text-cyan-400">decodeURIComponent (Decoded URL)</span>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-url-decode">Copy</button>
+              </div>
+              <input type="text" readonly id="out-url-decode" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- TOOL 6: UUID & Password Generator -->
+      <article id="tool-uuid" class="tool-card hidden space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-xl font-bold text-white">UUID v4 & Random Secret Key Generator</h2>
+            <p class="text-xs text-slate-400">Generate cryptographically secure random identifiers and API secrets instantly.</p>
+          </div>
+          <button id="btn-gen-all" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold transition">
+            Regenerate Now
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span class="font-semibold text-rose-400">UUID v4 (RFC 4122)</span>
+              <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-uuid">Copy</button>
+            </div>
+            <input type="text" readonly id="out-uuid" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span class="font-semibold text-rose-400">32-Byte Hex Token (API Secret Key)</span>
+              <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-hex-key">Copy</button>
+            </div>
+            <input type="text" readonly id="out-hex-key" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span class="font-semibold text-rose-400">Strong Password (24 characters, high entropy)</span>
+              <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-password">Copy</button>
+            </div>
+            <input type="text" readonly id="out-password" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+          </div>
+        </div>
+      </article>
+
+      <!-- Bottom SEO Text / FAQs (Crucial for Google Ranking) -->
+      <section class="mt-12 pt-8 border-t border-slate-800 space-y-4 text-xs text-slate-400 leading-relaxed">
+        <h3 class="text-sm font-bold text-slate-200">Why Use DevToolkit Pro?</h3>
+        <p>
+          DevToolkit Pro is built for developers who care about security, speed, and privacy. Unlike other online converters that transmit your data to backend servers, all formatting, conversions, and cryptographic hashes generated on DevToolkit Pro execute 100% locally on your machine using your browser's native JavaScript and Web Crypto engines.
+        </p>
+        <p>
+          Looking for offline CLI automation scripts or ready-to-deploy Python microservices? Visit the official <a href="https://svl.gumroad.com" class="text-blue-400 hover:underline">SVL Automation Software Store</a> to get developer tools with source code included.
+        </p>
+      </section>
+
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>&copy; 2026 DevToolkit Pro. Free client-side developer utilities.</span>
+      <div class="flex items-center space-x-4">
+        <a href="https://svl.gumroad.com/l/qzpfma" class="hover:text-slate-300 transition">Automation Bundle</a>
+        <a href="https://github.com/Svl550/awesome-automation-tools" class="hover:text-slate-300 transition">GitHub Showcase</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    // Tab Navigation
+    const tabs = document.querySelectorAll('.tool-tab-btn');
+    const cards = document.querySelectorAll('.tool-card');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('bg-slate-800', 'text-white', 'active');
+          t.classList.add('text-slate-400');
+        });
+        cards.forEach(c => c.classList.add('hidden'));
+
+        tab.classList.add('bg-slate-800', 'text-white', 'active');
+        tab.classList.remove('text-slate-400');
+        const targetId = tab.getAttribute('data-target');
+        const activeCard = document.getElementById(targetId);
+        if (activeCard) activeCard.classList.remove('hidden');
+      });
+    });
+
+    // Default active tab style
+    document.querySelector('.tool-tab-btn.active')?.classList.add('bg-slate-800', 'text-white');
+
+    // Copy to clipboard helper
+    function copyText(val, btnElem) {
+      if (!val) return;
+      navigator.clipboard.writeText(val).then(() => {
+        const orig = btnElem.textContent;
+        btnElem.textContent = 'Copied!';
+        setTimeout(() => { btnElem.textContent = orig; }, 1500);
+      });
+    }
+
+    document.querySelectorAll('.btn-copy-val').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const inputId = btn.getAttribute('data-for');
+        const el = document.getElementById(inputId);
+        if (el) copyText(el.value, btn);
+      });
+    });
+
+    // 1. JSON Formatter
+    const jsonInput = document.getElementById('json-input');
+    const jsonOutput = document.getElementById('json-output');
+    const jsonStatus = document.getElementById('json-status');
+
+    function formatJSON(space) {
+      try {
+        if (!jsonInput.value.trim()) {
+          jsonOutput.value = '';
+          jsonStatus.textContent = 'Ready';
+          jsonStatus.className = 'text-xs text-slate-500 font-mono';
+          return;
+        }
+        const parsed = JSON.parse(jsonInput.value);
+        jsonOutput.value = JSON.stringify(parsed, null, space);
+        jsonStatus.textContent = 'Valid JSON';
+        jsonStatus.className = 'text-xs text-emerald-400 font-mono';
+      } catch (e) {
+        jsonOutput.value = '';
+        jsonStatus.textContent = 'Error: ' + e.message;
+        jsonStatus.className = 'text-xs text-rose-400 font-mono';
+      }
+    }
+
+    document.getElementById('btn-json-format-2').addEventListener('click', () => formatJSON(2));
+    document.getElementById('btn-json-format-4').addEventListener('click', () => formatJSON(4));
+    document.getElementById('btn-json-minify').addEventListener('click', () => formatJSON(0));
+    document.getElementById('btn-json-copy').addEventListener('click', (e) => copyText(jsonOutput.value, e.target));
+    jsonInput.addEventListener('input', () => formatJSON(2));
+
+    // 2. JSON <-> CSV
+    const csvInput = document.getElementById('csv-input');
+    const csvOutput = document.getElementById('csv-output');
+
+    document.getElementById('btn-to-csv').addEventListener('click', () => {
+      try {
+        const raw = JSON.parse(csvInput.value.trim());
+        const arr = Array.isArray(raw) ? raw : [raw];
+        if (arr.length === 0) return;
+        const headers = Array.from(new Set(arr.flatMap(o => Object.keys(o))));
+        const lines = [headers.join(',')];
+        for (const row of arr) {
+          const vals = headers.map(h => {
+            let v = row[h] === undefined || row[h] === null ? '' : String(row[h]);
+            if (v.includes(',') || v.includes('"') || v.includes('\n')) {
+              v = '"' + v.replace(/"/g, '""') + '"';
+            }
+            return v;
+          });
+          lines.push(vals.join(','));
+        }
+        csvOutput.value = lines.join('\n');
+      } catch (err) {
+        csvOutput.value = 'Error converting to CSV: ' + err.message;
+      }
+    });
+
+    document.getElementById('btn-to-json').addEventListener('click', () => {
+      try {
+        const text = csvInput.value.trim();
+        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+        if (lines.length < 2) throw new Error('At least header and 1 row required.');
+        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+        const result = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+          const obj = {};
+          headers.forEach((h, idx) => { obj[h] = cols[idx] !== undefined ? cols[idx] : ''; });
+          result.push(obj);
+        }
+        csvOutput.value = JSON.stringify(result, null, 2);
+      } catch (err) {
+        csvOutput.value = 'Error converting to JSON: ' + err.message;
+      }
+    });
+
+    document.getElementById('btn-copy-csv').addEventListener('click', (e) => copyText(csvOutput.value, e.target));
+    document.getElementById('btn-download-csv').addEventListener('click', () => {
+      if (!csvOutput.value) return;
+      const blob = new Blob([csvOutput.value], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'export.txt';
+      a.click();
+    });
+
+    // 3. Base64
+    const b64Input = document.getElementById('b64-input');
+    const b64Output = document.getElementById('b64-output');
+
+    document.getElementById('btn-b64-encode').addEventListener('click', () => {
+      try {
+        b64Output.value = btoa(unescape(encodeURIComponent(b64Input.value)));
+      } catch (e) {
+        b64Output.value = 'Encoding error: ' + e.message;
+      }
+    });
+
+    document.getElementById('btn-b64-decode').addEventListener('click', () => {
+      try {
+        b64Output.value = decodeURIComponent(escape(atob(b64Input.value.trim())));
+      } catch (e) {
+        b64Output.value = 'Invalid Base64 string';
+      }
+    });
+
+    document.getElementById('btn-b64-copy').addEventListener('click', (e) => copyText(b64Output.value, e.target));
+
+    // 4. Crypto Hash Generator (Native Web Crypto API)
+    const hashInput = document.getElementById('hash-input');
+    async function computeHashes() {
+      const text = hashInput.value;
+      if (!text) {
+        document.getElementById('out-sha256').value = '';
+        document.getElementById('out-sha512').value = '';
+        document.getElementById('out-sha1').value = '';
+        return;
+      }
+      const enc = new TextEncoder();
+      const data = enc.encode(text);
+
+      async function hash(algo) {
+        const buf = await crypto.subtle.digest(algo, data);
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+
+      document.getElementById('out-sha256').value = await hash('SHA-256');
+      document.getElementById('out-sha512').value = await hash('SHA-512');
+      document.getElementById('out-sha1').value = await hash('SHA-1');
+    }
+    hashInput.addEventListener('input', computeHashes);
+
+    // 5. URL & Slug
+    const urlInput = document.getElementById('url-input');
+    function updateURLTools() {
+      const val = urlInput.value;
+      document.getElementById('out-url-encode').value = encodeURIComponent(val);
+      try {
+        document.getElementById('out-url-decode').value = decodeURIComponent(val);
+      } catch {
+        document.getElementById('out-url-decode').value = val;
+      }
+      // Slug
+      document.getElementById('out-slug').value = val
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+    urlInput.addEventListener('input', updateURLTools);
+
+    // 6. UUID & Random Key Generator
+    function generateSecrets() {
+      // UUID v4
+      const uuid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+      document.getElementById('out-uuid').value = uuid;
+
+      // 32-byte Hex Key
+      const keyBytes = new Uint8Array(32);
+      crypto.getRandomValues(keyBytes);
+      document.getElementById('out-hex-key').value = Array.from(keyBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+
+      // Password
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+';
+      const pwdBytes = new Uint8Array(24);
+      crypto.getRandomValues(pwdBytes);
+      let pwd = '';
+      for (let i = 0; i < 24; i++) {
+        pwd += chars[pwdBytes[i] % chars.length];
+      }
+      document.getElementById('out-password').value = pwd;
+    }
+    document.getElementById('btn-gen-all').addEventListener('click', generateSecrets);
+
+    // Init defaults
+    generateSecrets();
+    urlInput.value = "https://svl.gumroad.com/l/qzpfma?category=automation suite";
+    updateURLTools();
+  </script>
+</body>
+</html>
