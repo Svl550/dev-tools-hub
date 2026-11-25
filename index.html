@@ -442,11 +442,11 @@
           <table class="w-full text-left text-xs text-slate-300">
             <thead class="bg-slate-900 text-slate-400 uppercase text-[10px] tracking-wider sticky top-0 border-b border-slate-800">
               <tr>
-                <th class="py-2.5 px-3">Company</th>
-                <th class="py-2.5 px-3">Category</th>
-                <th class="py-2.5 px-3">Country</th>
-                <th class="py-2.5 px-3">Stage</th>
-                <th class="py-2.5 px-3">Headcount</th>
+                <th class="py-2.5 px-3 cursor-pointer hover:text-white select-none transition saas-sort-header" data-col="company_name">Company <span id="sort-icon-company_name" class="text-[9px] text-slate-500">↕</span></th>
+                <th class="py-2.5 px-3 cursor-pointer hover:text-white select-none transition saas-sort-header" data-col="category">Category <span id="sort-icon-category" class="text-[9px] text-slate-500">↕</span></th>
+                <th class="py-2.5 px-3 cursor-pointer hover:text-white select-none transition saas-sort-header" data-col="country">Country <span id="sort-icon-country" class="text-[9px] text-slate-500">↕</span></th>
+                <th class="py-2.5 px-3 cursor-pointer hover:text-white select-none transition saas-sort-header" data-col="funding_stage">Stage <span id="sort-icon-funding_stage" class="text-[9px] text-slate-500">↕</span></th>
+                <th class="py-2.5 px-3 cursor-pointer hover:text-white select-none transition saas-sort-header" data-col="headcount_estimate">Headcount <span id="sort-icon-headcount_estimate" class="text-[9px] text-slate-500">↕</span></th>
                 <th class="py-2.5 px-3">Description</th>
               </tr>
             </thead>
@@ -812,28 +812,170 @@
     document.getElementById('btn-json-copy').addEventListener('click', (e) => copyText(jsonOutput.value, e.target));
     jsonInput.addEventListener('input', () => formatJSON(2));
 
-    // 2. JSON <-> CSV
+    // 2. JSON <-> CSV (RFC 4180 Compliant Engine)
     const csvInput = document.getElementById('csv-input');
     const csvOutput = document.getElementById('csv-output');
+
+    const CSVEngine = {
+      // RFC 4180 compliant character-by-character parser
+      parse(text) {
+        if (!text || typeof text !== 'string') return [];
+        const rows = [];
+        let currentRow = [];
+        let currentField = '';
+        let inQuotes = false;
+        let i = 0;
+        const len = text.length;
+
+        while (i < len) {
+          const char = text[i];
+          const nextChar = i + 1 < len ? text[i + 1] : '';
+
+          if (inQuotes) {
+            if (char === '"') {
+              if (nextChar === '"') {
+                // Escaped double-quote: "" -> "
+                currentField += '"';
+                i += 2;
+                continue;
+              } else {
+                // End of quoted field
+                inQuotes = false;
+                i++;
+                continue;
+              }
+            } else {
+              currentField += char;
+              i++;
+              continue;
+            }
+          } else {
+            if (char === '"') {
+              inQuotes = true;
+              i++;
+              continue;
+            } else if (char === ',') {
+              currentRow.push(currentField);
+              currentField = '';
+              i++;
+              continue;
+            } else if (char === '\r') {
+              if (nextChar === '\n') i++;
+              currentRow.push(currentField);
+              currentField = '';
+              rows.push(currentRow);
+              currentRow = [];
+              i++;
+              continue;
+            } else if (char === '\n') {
+              currentRow.push(currentField);
+              currentField = '';
+              rows.push(currentRow);
+              currentRow = [];
+              i++;
+              continue;
+            } else {
+              currentField += char;
+              i++;
+              continue;
+            }
+          }
+        }
+
+        currentRow.push(currentField);
+        // Include row if it contains data or more than one column
+        if (currentRow.length > 1 || (currentRow.length === 1 && currentRow[0] !== '')) {
+          rows.push(currentRow);
+        }
+
+        return rows;
+      },
+
+      // Flattens nested objects into dot notation (e.g. user.address.city)
+      flattenObject(obj, prefix = '', res = {}) {
+        if (obj === null || obj === undefined) return res;
+        for (const key of Object.keys(obj)) {
+          const val = obj[key];
+          const newKey = prefix ? `${prefix}.${key}` : key;
+          if (val && typeof val === 'object' && !Array.isArray(val) && !(val instanceof Date)) {
+            this.flattenObject(val, newKey, res);
+          } else if (Array.isArray(val)) {
+            res[newKey] = JSON.stringify(val);
+          } else {
+            res[newKey] = val;
+          }
+        }
+        return res;
+      },
+
+      // Convert JSON array or single object to RFC 4180 CSV
+      jsonToCsv(data) {
+        if (!data) throw new Error('Input is empty.');
+        const rawArr = Array.isArray(data) ? data : [data];
+        if (rawArr.length === 0) throw new Error('JSON array is empty.');
+
+        const flatArr = rawArr.map(item => {
+          if (item && typeof item === 'object') {
+            return this.flattenObject(item);
+          }
+          return { value: item };
+        });
+
+        // Collect all headers preserving original key order
+        const headerSet = new Set();
+        flatArr.forEach(item => Object.keys(item).forEach(k => headerSet.add(k)));
+        const headers = Array.from(headerSet);
+
+        function formatCell(val) {
+          if (val === undefined || val === null) return '';
+          const str = String(val);
+          if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+            return '"' + str.replace(/"/g, '""') + '"';
+          }
+          return str;
+        }
+
+        const lines = [];
+        lines.push(headers.map(formatCell).join(','));
+
+        for (const row of flatArr) {
+          const line = headers.map(h => formatCell(row[h]));
+          lines.push(line.join(','));
+        }
+
+        return lines.join('\r\n');
+      },
+
+      // Convert CSV string to JSON array of objects
+      csvToJson(csvString) {
+        if (!csvString || !csvString.trim()) throw new Error('CSV input is empty.');
+        const rows = this.parse(csvString.trim());
+        if (rows.length < 1) throw new Error('CSV contains no data.');
+        if (rows.length < 2) throw new Error('At least one header row and one data row are required.');
+
+        const headers = rows[0].map((h, idx) => (h && h.trim()) ? h.trim() : `column_${idx + 1}`);
+        const results = [];
+
+        for (let r = 1; r < rows.length; r++) {
+          const row = rows[r];
+          // Skip trailing empty lines
+          if (row.length === 1 && row[0] === '') continue;
+
+          const obj = {};
+          headers.forEach((header, idx) => {
+            obj[header] = row[idx] !== undefined ? row[idx] : '';
+          });
+          results.push(obj);
+        }
+
+        return results;
+      }
+    };
 
     document.getElementById('btn-to-csv').addEventListener('click', () => {
       try {
         const raw = JSON.parse(csvInput.value.trim());
-        const arr = Array.isArray(raw) ? raw : [raw];
-        if (arr.length === 0) return;
-        const headers = Array.from(new Set(arr.flatMap(o => Object.keys(o))));
-        const lines = [headers.join(',')];
-        for (const row of arr) {
-          const vals = headers.map(h => {
-            let v = row[h] === undefined || row[h] === null ? '' : String(row[h]);
-            if (v.includes(',') || v.includes('"') || v.includes('\n')) {
-              v = '"' + v.replace(/"/g, '""') + '"';
-            }
-            return v;
-          });
-          lines.push(vals.join(','));
-        }
-        csvOutput.value = lines.join('\n');
+        csvOutput.value = CSVEngine.jsonToCsv(raw);
       } catch (err) {
         csvOutput.value = 'Error converting to CSV: ' + err.message;
       }
@@ -841,17 +983,7 @@
 
     document.getElementById('btn-to-json').addEventListener('click', () => {
       try {
-        const text = csvInput.value.trim();
-        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
-        if (lines.length < 2) throw new Error('At least header and 1 row required.');
-        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-        const result = [];
-        for (let i = 1; i < lines.length; i++) {
-          const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-          const obj = {};
-          headers.forEach((h, idx) => { obj[h] = cols[idx] !== undefined ? cols[idx] : ''; });
-          result.push(obj);
-        }
+        const result = CSVEngine.csvToJson(csvInput.value);
         csvOutput.value = JSON.stringify(result, null, 2);
       } catch (err) {
         csvOutput.value = 'Error converting to JSON: ' + err.message;
@@ -861,11 +993,13 @@
     document.getElementById('btn-copy-csv').addEventListener('click', (e) => copyText(csvOutput.value, e.target));
     document.getElementById('btn-download-csv').addEventListener('click', () => {
       if (!csvOutput.value) return;
-      const blob = new Blob([csvOutput.value], { type: 'text/plain;charset=utf-8' });
+      // Prepend UTF-8 BOM (\uFEFF) so Excel on Windows properly displays accents and Unicode
+      const blob = new Blob(['\uFEFF' + csvOutput.value], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'export.txt';
+      a.download = 'export.csv';
       a.click();
+      URL.revokeObjectURL(a.href);
     });
 
     // 3. Base64
@@ -964,7 +1098,7 @@
     urlInput.value = "https://svl.gumroad.com/l/qzpfma?category=automation suite";
     updateURLTools();
 
-    // SaaS Directory Logic
+    // SaaS Directory Logic (Secured against XSS with Column Sorting)
     (function initSaasExplorer() {
       const saasData = window.STARTUPS_SAMPLE_DATA || [];
       const saasSearch = document.getElementById('saas-search');
@@ -972,8 +1106,33 @@
       const saasCountry = document.getElementById('saas-country');
       const saasTableBody = document.getElementById('saas-table-body');
       const saasCount = document.getElementById('saas-count-display');
+      const sortHeaders = document.querySelectorAll('.saas-sort-header');
 
       if (!saasData.length || !saasTableBody) return;
+
+      // XSS Protection: HTML Escape helper
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      // Safe URL verification (rejects javascript:, data:, vbscript:)
+      function sanitizeUrl(url) {
+        if (!url || typeof url !== 'string') return '#';
+        const trimmed = url.trim();
+        if (/^https?:\/\//i.test(trimmed)) {
+          return encodeURI(trimmed);
+        }
+        return '#';
+      }
+
+      // Sorting state
+      let currentSort = { col: 'company_name', asc: true };
 
       const categories = [...new Set(saasData.map(d => d.category).filter(Boolean))].sort();
       const countries = [...new Set(saasData.map(d => d.country).filter(Boolean))].sort();
@@ -992,12 +1151,41 @@
         saasCountry.appendChild(opt);
       });
 
+      function updateSortIcons() {
+        sortHeaders.forEach(th => {
+          const col = th.getAttribute('data-col');
+          const icon = document.getElementById(`sort-icon-${col}`);
+          if (!icon) return;
+          if (currentSort.col === col) {
+            icon.textContent = currentSort.asc ? '▲' : '▼';
+            icon.className = 'text-[10px] text-emerald-400 font-bold';
+          } else {
+            icon.textContent = '↕';
+            icon.className = 'text-[9px] text-slate-500';
+          }
+        });
+      }
+
+      sortHeaders.forEach(th => {
+        th.addEventListener('click', () => {
+          const col = th.getAttribute('data-col');
+          if (currentSort.col === col) {
+            currentSort.asc = !currentSort.asc;
+          } else {
+            currentSort.col = col;
+            currentSort.asc = true;
+          }
+          updateSortIcons();
+          renderSaasTable();
+        });
+      });
+
       function renderSaasTable() {
         const q = (saasSearch.value || '').toLowerCase().trim();
         const selectedCat = saasCategory.value;
         const selectedCountry = saasCountry.value;
 
-        const filtered = saasData.filter(item => {
+        let filtered = saasData.filter(item => {
           if (selectedCat && item.category !== selectedCat) return false;
           if (selectedCountry && item.country !== selectedCountry) return false;
           if (q) {
@@ -1007,6 +1195,15 @@
           return true;
         });
 
+        // Apply column sorting
+        if (currentSort.col) {
+          filtered.sort((a, b) => {
+            const valA = String(a[currentSort.col] || '').toLowerCase();
+            const valB = String(b[currentSort.col] || '').toLowerCase();
+            return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+          });
+        }
+
         saasCount.textContent = `Showing ${filtered.length} of ${saasData.length} preview startups`;
 
         if (filtered.length === 0) {
@@ -1014,26 +1211,37 @@
           return;
         }
 
-        saasTableBody.innerHTML = filtered.map(row => `
-          <tr class="hover:bg-slate-900/50 transition">
-            <td class="py-2.5 px-3 whitespace-nowrap">
-              <a href="${row.website}" target="_blank" rel="noopener" class="font-semibold text-emerald-400 hover:underline inline-flex items-center space-x-1">
-                <span>${row.company_name}</span>
-                <span class="text-[10px] text-slate-500">↗</span>
-              </a>
-            </td>
-            <td class="py-2.5 px-3 whitespace-nowrap"><span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700">${row.category || 'SaaS'}</span></td>
-            <td class="py-2.5 px-3 whitespace-nowrap text-slate-400">${row.country || 'Global'}</td>
-            <td class="py-2.5 px-3 whitespace-nowrap text-slate-400 font-mono text-[11px]">${row.funding_stage || 'N/A'}</td>
-            <td class="py-2.5 px-3 whitespace-nowrap text-slate-400">${row.headcount_estimate || '1-10'}</td>
-            <td class="py-2.5 px-3 text-slate-400 max-w-xs truncate" title="${row.description || ''}">${row.description || ''}</td>
-          </tr>
-        `).join('');
+        saasTableBody.innerHTML = filtered.map(row => {
+          const safeWebsite = sanitizeUrl(row.website);
+          const safeName = escapeHtml(row.company_name);
+          const safeCat = escapeHtml(row.category || 'SaaS');
+          const safeCountry = escapeHtml(row.country || 'Global');
+          const safeStage = escapeHtml(row.funding_stage || 'N/A');
+          const safeHeadcount = escapeHtml(row.headcount_estimate || '1-10');
+          const safeDesc = escapeHtml(row.description || '');
+
+          return `
+            <tr class="hover:bg-slate-900/50 transition">
+              <td class="py-2.5 px-3 whitespace-nowrap">
+                <a href="${safeWebsite}" target="_blank" rel="noopener noreferrer" class="font-semibold text-emerald-400 hover:underline inline-flex items-center space-x-1">
+                  <span>${safeName}</span>
+                  <span class="text-[10px] text-slate-500">↗</span>
+                </a>
+              </td>
+              <td class="py-2.5 px-3 whitespace-nowrap"><span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700">${safeCat}</span></td>
+              <td class="py-2.5 px-3 whitespace-nowrap text-slate-400">${safeCountry}</td>
+              <td class="py-2.5 px-3 whitespace-nowrap text-slate-400 font-mono text-[11px]">${safeStage}</td>
+              <td class="py-2.5 px-3 whitespace-nowrap text-slate-400">${safeHeadcount}</td>
+              <td class="py-2.5 px-3 text-slate-400 max-w-xs truncate" title="${safeDesc}">${safeDesc}</td>
+            </tr>
+          `;
+        }).join('');
       }
 
       saasSearch.addEventListener('input', renderSaasTable);
       saasCategory.addEventListener('change', renderSaasTable);
       saasCountry.addEventListener('change', renderSaasTable);
+      updateSortIcons();
       renderSaasTable();
     })();
 
