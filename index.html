@@ -812,18 +812,23 @@
     document.getElementById('btn-json-copy').addEventListener('click', (e) => copyText(jsonOutput.value, e.target));
     jsonInput.addEventListener('input', () => formatJSON(2));
 
-    // 2. JSON <-> CSV (RFC 4180 Compliant Engine)
+    // 2. JSON <-> CSV (RFC 4180 Compliant Engine with Security & Validation)
     const csvInput = document.getElementById('csv-input');
     const csvOutput = document.getElementById('csv-output');
 
     const CSVEngine = {
-      // RFC 4180 compliant character-by-character parser
-      parse(text) {
-        if (!text || typeof text !== 'string') return [];
+      // RFC 4180 strict parser with syntax validation and BOM stripping
+      parse(rawText) {
+        if (!rawText || typeof rawText !== 'string') return [];
+        // 1. Strip incoming UTF-8 BOM if present
+        let text = rawText.charCodeAt(0) === 0xFEFF ? rawText.slice(1) : rawText;
+
         const rows = [];
         let currentRow = [];
         let currentField = '';
         let inQuotes = false;
+        let fieldHadQuotes = false;
+        let afterClosingQuote = false;
         let i = 0;
         const len = text.length;
 
@@ -831,16 +836,56 @@
           const char = text[i];
           const nextChar = i + 1 < len ? text[i + 1] : '';
 
+          if (afterClosingQuote) {
+            // After closing quote, only optional spaces followed by comma or newline are allowed
+            if (char === ' ' || char === '\t') {
+              i++;
+              continue;
+            } else if (char === ',') {
+              currentRow.push(currentField);
+              currentField = '';
+              inQuotes = false;
+              fieldHadQuotes = false;
+              afterClosingQuote = false;
+              i++;
+              continue;
+            } else if (char === '\r') {
+              if (nextChar === '\n') i++;
+              currentRow.push(currentField);
+              currentField = '';
+              rows.push(currentRow);
+              currentRow = [];
+              inQuotes = false;
+              fieldHadQuotes = false;
+              afterClosingQuote = false;
+              i++;
+              continue;
+            } else if (char === '\n') {
+              currentRow.push(currentField);
+              currentField = '';
+              rows.push(currentRow);
+              currentRow = [];
+              inQuotes = false;
+              fieldHadQuotes = false;
+              afterClosingQuote = false;
+              i++;
+              continue;
+            } else {
+              throw new Error(`CSV syntax error: invalid character '${char}' immediately after closing quote at character index ${i}`);
+            }
+          }
+
           if (inQuotes) {
             if (char === '"') {
               if (nextChar === '"') {
-                // Escaped double-quote: "" -> "
+                // Escaped quote: "" -> "
                 currentField += '"';
                 i += 2;
                 continue;
               } else {
-                // End of quoted field
+                // Closing quote
                 inQuotes = false;
+                afterClosingQuote = true;
                 i++;
                 continue;
               }
@@ -850,13 +895,22 @@
               continue;
             }
           } else {
+            // Unquoted field
             if (char === '"') {
-              inQuotes = true;
-              i++;
-              continue;
+              if (currentField.length === 0) {
+                // Legitimate start of quoted field
+                inQuotes = true;
+                fieldHadQuotes = true;
+                i++;
+                continue;
+              } else {
+                // Bare quote inside unquoted field violates RFC 4180
+                throw new Error(`CSV syntax error: misplaced quote inside unquoted field at character index ${i}`);
+              }
             } else if (char === ',') {
               currentRow.push(currentField);
               currentField = '';
+              fieldHadQuotes = false;
               i++;
               continue;
             } else if (char === '\r') {
@@ -865,6 +919,7 @@
               currentField = '';
               rows.push(currentRow);
               currentRow = [];
+              fieldHadQuotes = false;
               i++;
               continue;
             } else if (char === '\n') {
@@ -872,6 +927,7 @@
               currentField = '';
               rows.push(currentRow);
               currentRow = [];
+              fieldHadQuotes = false;
               i++;
               continue;
             } else {
@@ -882,8 +938,12 @@
           }
         }
 
+        // EOF validations
+        if (inQuotes) {
+          throw new Error('CSV syntax error: unclosed quote at end of input');
+        }
+
         currentRow.push(currentField);
-        // Include row if it contains data or more than one column
         if (currentRow.length > 1 || (currentRow.length === 1 && currentRow[0] !== '')) {
           rows.push(currentRow);
         }
@@ -891,7 +951,7 @@
         return rows;
       },
 
-      // Flattens nested objects into dot notation (e.g. user.address.city)
+      // Flattens nested objects with collision detection (no silent data loss)
       flattenObject(obj, prefix = '', res = {}) {
         if (obj === null || obj === undefined) return res;
         for (const key of Object.keys(obj)) {
@@ -899,16 +959,23 @@
           const newKey = prefix ? `${prefix}.${key}` : key;
           if (val && typeof val === 'object' && !Array.isArray(val) && !(val instanceof Date)) {
             this.flattenObject(val, newKey, res);
-          } else if (Array.isArray(val)) {
-            res[newKey] = JSON.stringify(val);
           } else {
-            res[newKey] = val;
+            let targetKey = newKey;
+            if (Object.prototype.hasOwnProperty.call(res, targetKey)) {
+              // Collision detected! Disambiguate without silent data loss
+              let count = 1;
+              while (Object.prototype.hasOwnProperty.call(res, `${newKey}_collision_${count}`)) {
+                count++;
+              }
+              targetKey = `${newKey}_collision_${count}`;
+            }
+            res[targetKey] = Array.isArray(val) ? JSON.stringify(val) : val;
           }
         }
         return res;
       },
 
-      // Convert JSON array or single object to RFC 4180 CSV
+      // Convert JSON to RFC 4180 CSV with CSV Formula Injection protection
       jsonToCsv(data) {
         if (!data) throw new Error('Input is empty.');
         const rawArr = Array.isArray(data) ? data : [data];
@@ -926,9 +993,19 @@
         flatArr.forEach(item => Object.keys(item).forEach(k => headerSet.add(k)));
         const headers = Array.from(headerSet);
 
+        // Cell formatter with CSV Injection (Formula Injection) protection
         function formatCell(val) {
           if (val === undefined || val === null) return '';
-          const str = String(val);
+          let str = String(val);
+
+          // Formula Injection defense: check for =, +, -, @, \t, \r, |
+          const formulaPrefixes = /^[\=\+\-\@\t\r\|]/;
+          if (formulaPrefixes.test(str)) {
+            // Prepend a single quote so spreadsheets treat it as inert literal text
+            str = "'" + str;
+          }
+
+          // RFC 4180 escaping
           if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
             return '"' + str.replace(/"/g, '""') + '"';
           }
@@ -949,7 +1026,7 @@
       // Convert CSV string to JSON array of objects
       csvToJson(csvString) {
         if (!csvString || !csvString.trim()) throw new Error('CSV input is empty.');
-        const rows = this.parse(csvString.trim());
+        const rows = this.parse(csvString);
         if (rows.length < 1) throw new Error('CSV contains no data.');
         if (rows.length < 2) throw new Error('At least one header row and one data row are required.');
 
@@ -958,7 +1035,6 @@
 
         for (let r = 1; r < rows.length; r++) {
           const row = rows[r];
-          // Skip trailing empty lines
           if (row.length === 1 && row[0] === '') continue;
 
           const obj = {};
@@ -1195,12 +1271,21 @@
           return true;
         });
 
-        // Apply column sorting
+        // Apply column sorting (Numeric for headcount, Linguistic localeCompare for text)
         if (currentSort.col) {
           filtered.sort((a, b) => {
-            const valA = String(a[currentSort.col] || '').toLowerCase();
-            const valB = String(b[currentSort.col] || '').toLowerCase();
-            return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+            if (currentSort.col === 'headcount_estimate') {
+              const matchA = String(a.headcount_estimate || '').match(/\d+/);
+              const matchB = String(b.headcount_estimate || '').match(/\d+/);
+              const numA = matchA ? parseInt(matchA[0], 10) : 0;
+              const numB = matchB ? parseInt(matchB[0], 10) : 0;
+              return currentSort.asc ? numA - numB : numB - numA;
+            }
+            const valA = String(a[currentSort.col] || '');
+            const valB = String(b[currentSort.col] || '');
+            return currentSort.asc
+              ? valA.localeCompare(valB, undefined, { sensitivity: 'base', numeric: true })
+              : valB.localeCompare(valA, undefined, { sensitivity: 'base', numeric: true });
           });
         }
 
