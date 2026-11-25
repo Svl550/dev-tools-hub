@@ -649,7 +649,7 @@
       <section class="mt-12 pt-8 border-t border-slate-800 space-y-4 text-xs text-slate-400 leading-relaxed">
         <h3 class="text-sm font-bold text-slate-200">Why Use DevToolkit Pro?</h3>
         <p>
-          DevToolkit Pro is built for developers who care about security, speed, and privacy. Unlike other online converters that transmit your data to backend servers, all formatting, conversions, and cryptographic hashes generated on DevToolkit Pro execute 100% locally on your machine using your browser's native JavaScript and Web Crypto engines.
+          DevToolkit Pro is built for developers who care about security, speed, and privacy. All free online utilities (JSON, CSV, Base64, Hash, UUID, Code Formatter, URL Slug) execute 100% locally on your machine using your browser's native JavaScript and Web Crypto engines. With the sole documented exception of the live SpamShield Anti-Fraud API demo (which transmits the queried address to an external verification endpoint via HTTPS), no user data or payloads are ever transmitted to any remote server.
         </p>
         <p>
           Looking for offline CLI automation scripts or ready-to-deploy Python microservices? Visit the official <a href="https://svl.gumroad.com" class="text-blue-400 hover:underline">SVL Automation Software Store</a> to get developer tools with source code included.
@@ -792,7 +792,7 @@
         <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-2">
           <h3 class="text-sm font-bold text-white">How is DevToolkit Pro 100% private and secure?</h3>
           <p class="text-xs text-slate-300 leading-relaxed">
-            All free online converters (JSON, CSV, Base64, Hash, UUID, Code Formatter) execute entirely inside your web browser via client-side JavaScript and the native Web Crypto API. No data, payloads, or text are ever transmitted to any remote server or stored in any database.
+            All free local developer tools (JSON, CSV, Base64, Hash, UUID, Code Formatter, URL Slug) execute entirely inside your web browser via client-side JavaScript and the native Web Crypto API. No data or text from these local tools is transmitted to any remote server. The only documented exception is the SpamShield Email Checker, where the entered email address is transmitted over encrypted HTTPS to the third-party SpamShield API on Render Cloud for syntax and MX record verification.
           </p>
         </div>
 
@@ -1604,6 +1604,9 @@
         'ß': 'ss',
         'ø': 'o',  'Ø': 'o',
         'å': 'a',  'Å': 'a',
+        'ı': 'i',  'İ': 'i',
+        'ł': 'l',  'Ł': 'l',
+        'đ': 'd',  'Đ': 'd',
         'ç': 'c',  'Ç': 'c',
         'ñ': 'n',  'Ñ': 'n',
         'ð': 'd',  'Ð': 'd',
@@ -1614,7 +1617,7 @@
         if (!str) return '';
         let text = String(str);
 
-        // 1. Convert ligatures (French œ, æ, German ß, Nordic ø, å, etc.)
+        // 1. Convert ligatures & special regional letters (Turkish ı, Polish ł, Croatian đ, etc.)
         for (const [lig, rep] of Object.entries(UrlEngine.LIGATURES)) {
           text = text.replaceAll(lig, rep);
         }
@@ -1625,13 +1628,13 @@
         // 3. Convert apostrophes to space for clean French SEO slugs (d'outils -> d-outils)
         text = text.replace(/['’]/g, ' ');
 
-        // 4. Lowercase and sanitize for strict SEO rules
+        // 4. Lowercase and sanitize for strict SEO rules: preserves Unicode letters (\p{L}) and numbers (\p{N})
         return text
           .toLowerCase()
           .trim()
-          .replace(/[^a-z0-9\s-_]/g, '')   // Strip special non-ASCII characters
-          .replace(/[\s_-]+/g, '-')        // Collapse consecutive spaces & dashes
-          .replace(/^-+|-+$/g, '');        // Strip leading & trailing dashes
+          .replace(/[^\p{L}\p{N}\s\-_]/gu, '') // Preserves Unicode alphabetic scripts while stripping symbols
+          .replace(/[\s_-]+/g, '-')          // Collapse consecutive spaces & dashes
+          .replace(/^-+|-+$/g, '');          // Strip leading & trailing dashes
       },
 
       encodeUri: function(str) {
@@ -2130,68 +2133,129 @@
     })();
 
     // =========================================================================
-    // 9. HTML & CSS FORMATTER / MINIFIER (Pre/Code & Comments Preserved)
+    // 9. HTML & CSS FORMATTER / MINIFIER (Lexical State Tokenizer & Quoted String Defense)
     // =========================================================================
     const CodeFormatEngine = {
       beautifyHtml: function(rawHtml) {
         if (!rawHtml || !rawHtml.trim()) return '';
 
-        // 1. Isolate and preserve <pre> and <code> blocks verbatim
-        const preBlocks = [];
-        let text = rawHtml.replace(/<(pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi, (match) => {
-          preBlocks.push(match);
-          return `___DEVTOOL_PRE_${preBlocks.length - 1}___`;
+        // 1. Isolate and preserve verbatim blocks (<pre>, <code>, <script>, <style>)
+        const rawBlocks = [];
+        let text = rawHtml.replace(/<(pre|code|script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, (match) => {
+          rawBlocks.push(match);
+          return `___DEVTOOL_RAW_BLOCK_${rawBlocks.length - 1}___`;
         });
 
-        // 2. Void self-closing tags list
         const voidTags = new Set([
           'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 
           'link', 'meta', 'param', 'source', 'track', 'wbr'
         ]);
 
-        const tokens = text.replace(/>\s*</g, '><').split(/(?=<)|(?<=>)/);
-        let indent = 0;
-        const tab = '  ';
-        const lines = [];
+        // 2. Lexical state tokenizer: respects attribute quotes and literal chevrons
+        const tokens = [];
+        let i = 0;
+        const len = text.length;
+        let textBuf = '';
 
-        for (let tok of tokens) {
-          tok = tok.trim();
-          if (!tok) continue;
-
-          // Preserve HTML comment as is
-          if (tok.startsWith('<!--')) {
-            lines.push(tab.repeat(indent) + tok);
-            continue;
+        function flushText() {
+          if (textBuf.trim()) {
+            tokens.push({ type: 'text', content: textBuf.trim() });
           }
+          textBuf = '';
+        }
 
-          // Closing tag
-          if (tok.startsWith('</')) {
-            indent = Math.max(0, indent - 1);
-            lines.push(tab.repeat(indent) + tok);
-            continue;
-          }
-
-          // Opening or self-closing tag
-          if (tok.startsWith('<')) {
-            lines.push(tab.repeat(indent) + tok);
-            const isSelfClosing = tok.endsWith('/>');
-            const matchTag = tok.match(/^<([a-zA-Z0-9:-]+)/);
-            const tagName = matchTag ? matchTag[1].toLowerCase() : '';
-            if (!isSelfClosing && tagName && !voidTags.has(tagName) && !tok.includes(`</${tagName}>`)) {
-              indent++;
+        while (i < len) {
+          // HTML comments <!-- ... -->
+          if (text.startsWith('<!--', i)) {
+            flushText();
+            const endIdx = text.indexOf('-->', i + 4);
+            if (endIdx !== -1) {
+              tokens.push({ type: 'comment', content: text.slice(i, endIdx + 3) });
+              i = endIdx + 3;
+            } else {
+              tokens.push({ type: 'comment', content: text.slice(i) });
+              i = len;
             }
             continue;
           }
 
-          // Text node
-          lines.push(tab.repeat(indent) + tok);
+          // Closing tag </tag>
+          if (text.startsWith('</', i)) {
+            const matchClose = text.slice(i).match(/^<\/([a-zA-Z0-9:-]+)\s*>/);
+            if (matchClose) {
+              flushText();
+              tokens.push({ type: 'close', tag: matchClose[1].toLowerCase(), content: matchClose[0] });
+              i += matchClose[0].length;
+              continue;
+            }
+          }
+
+          // Opening or self-closing tag <tag ...>
+          if (text[i] === '<' && /[a-zA-Z0-9:-]/.test(text[i + 1])) {
+            flushText();
+            let tagStart = i;
+            i++;
+            let inQuote = null;
+            while (i < len) {
+              const char = text[i];
+              if (inQuote) {
+                if (char === inQuote) inQuote = null;
+              } else {
+                if (char === '"' || char === "'") {
+                  inQuote = char;
+                } else if (char === '>') {
+                  i++;
+                  break;
+                }
+              }
+              i++;
+            }
+            const tagContent = text.slice(tagStart, i);
+            const tagMatch = tagContent.match(/^<([a-zA-Z0-9:-]+)/);
+            const tagName = tagMatch ? tagMatch[1].toLowerCase() : '';
+            const isSelfClosing = tagContent.endsWith('/>') || voidTags.has(tagName);
+
+            tokens.push({
+              type: 'open',
+              tag: tagName,
+              content: tagContent,
+              selfClosing: isSelfClosing
+            });
+            continue;
+          }
+
+          // Regular text node (including literal unescaped chevrons like 5 < 10)
+          textBuf += text[i];
+          i++;
+        }
+        flushText();
+
+        // 3. Indentation assembly
+        let indent = 0;
+        const tab = '  ';
+        const lines = [];
+
+        for (const tok of tokens) {
+          if (tok.type === 'comment') {
+            lines.push(tab.repeat(indent) + tok.content);
+          } else if (tok.type === 'close') {
+            indent = Math.max(0, indent - 1);
+            lines.push(tab.repeat(indent) + tok.content);
+          } else if (tok.type === 'open') {
+            lines.push(tab.repeat(indent) + tok.content);
+            if (!tok.selfClosing) {
+              indent++;
+            }
+          } else if (tok.type === 'text') {
+            lines.push(tab.repeat(indent) + tok.content);
+          }
         }
 
         let formatted = lines.join('\n');
 
-        // 3. Restore <pre> and <code> blocks verbatim
-        for (let i = 0; i < preBlocks.length; i++) {
-          formatted = formatted.replace(`___DEVTOOL_PRE_${i}___`, preBlocks[i]);
+        // 4. Restore verbatim blocks (<pre>, <code>, <script>, <style>)
+        for (let k = 0; k < rawBlocks.length; k++) {
+          formatted = formatted.replace(`___DEVTOOL_RAW_BLOCK_${k}___`, rawBlocks[k]);
         }
 
         return formatted;
@@ -2200,29 +2264,53 @@
       beautifyCss: function(rawCss) {
         if (!rawCss || !rawCss.trim()) return '';
 
-        // 1. Preserve CSS comments and ensure newline separation
+        // 1. Isolate CSS comments
         const comments = [];
         let css = rawCss.replace(/\/\*[\s\S]*?\*\//g, (match) => {
           comments.push(match);
-          return `\n___DEVTOOL_CSS_COMMENT_${comments.length - 1}___\n`;
+          return `\n___DEVTOOL_CSS_COMM_${comments.length - 1}___\n`;
         });
 
-        // 2. Ensure standard spacing after property colons: property: value
+        // 2. Isolate url(...) blocks to protect embedded semicolons, colons and data-URIs
+        const urls = [];
+        css = css.replace(/url\(\s*(['"]?)([\s\S]*?)\1\s*\)/gi, (match) => {
+          urls.push(match);
+          return `___DEVTOOL_CSS_URL_${urls.length - 1}___`;
+        });
+
+        // 3. Isolate single- and double-quoted strings to protect embedded semicolons and braces
+        const strings = [];
+        css = css.replace(/(["'])(?:(?=(\\?))\2[\s\S])*?\1/g, (match) => {
+          strings.push(match);
+          return `___DEVTOOL_CSS_STR_${strings.length - 1}___`;
+        });
+
+        // 4. Normalize spacing around property colons
         css = css.replace(/([a-zA-Z0-9_-]+)\s*:\s*([^;{}]+);/g, '$1: $2;');
 
-        // 3. Format braces, rules and indentation
+        // 5. Format structural braces and statement semicolons
         css = css
           .replace(/\s*\{\s*/g, ' {\n  ')
           .replace(/;\s*(?!\})/g, ';\n  ')
           .replace(/;\s*\}/g, ';\n}')
           .replace(/\s*\}\s*/g, '\n}\n\n');
 
-        // Clean trailing whitespaces on each line
+        // Clean trailing whitespaces per line
         css = css.split('\n').map(l => l.trimEnd()).join('\n').trim();
 
-        // 4. Restore comments
-        for (let i = 0; i < comments.length; i++) {
-          css = css.replace(`___DEVTOOL_CSS_COMMENT_${i}___`, comments[i]);
+        // 6. Restore string literals
+        for (let s = 0; s < strings.length; s++) {
+          css = css.replace(`___DEVTOOL_CSS_STR_${s}___`, strings[s]);
+        }
+
+        // 7. Restore url(...) blocks
+        for (let u = 0; u < urls.length; u++) {
+          css = css.replace(`___DEVTOOL_CSS_URL_${u}___`, urls[u]);
+        }
+
+        // 8. Restore comments
+        for (let c = 0; c < comments.length; c++) {
+          css = css.replace(`___DEVTOOL_CSS_COMM_${c}___`, comments[c]);
         }
 
         return css;
