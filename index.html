@@ -238,7 +238,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <h2 class="text-xl font-bold text-white">Base64 Encoder & Decoder</h2>
-            <p class="text-xs text-slate-400">Encode standard text into Base64 or decode Base64 back to readable text.</p>
+            <p class="text-xs text-slate-400">Encode standard text into Base64 or decode Base64 back to readable text (Full UTF-8 & Emoji support).</p>
           </div>
           <div class="flex items-center space-x-2">
             <button id="btn-b64-encode" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition">Encode</button>
@@ -249,11 +249,17 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Input Text</label>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <label class="font-semibold text-slate-400">Input Text</label>
+              <span id="b64-input-len" class="text-slate-500 text-[11px]">Texte brut ou chaîne Base64</span>
+            </div>
             <textarea id="b64-input" rows="14" placeholder="Enter text or base64 string..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 resize-y"></textarea>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Output Result</label>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <label class="font-semibold text-slate-400">Output Result</label>
+              <span id="b64-status-msg" class="text-slate-500 text-[11px]">Prêt</span>
+            </div>
             <textarea id="b64-output" readonly rows="14" placeholder="Encoded or decoded string..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
           </div>
         </div>
@@ -261,22 +267,37 @@
 
       <!-- TOOL 4: Hash Generator -->
       <article id="tool-hash" class="tool-card hidden space-y-4">
-        <div class="border-b border-slate-800 pb-3">
-          <h2 class="text-xl font-bold text-white">Cryptographic Hash Generator (SHA-256, SHA-512, SHA-1)</h2>
-          <p class="text-xs text-slate-400">Compute cryptographic checksums in real-time using standard Web Crypto primitives.</p>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <div class="flex items-center space-x-2">
+              <h2 class="text-xl font-bold text-white">Cryptographic Hash Generator (SHA-256, SHA-512, SHA-1)</h2>
+              <span id="hash-loading-badge" class="hidden px-2 py-0.5 text-[11px] font-semibold rounded bg-purple-950/80 text-purple-300 border border-purple-800 animate-pulse">Calcul en cours...</span>
+            </div>
+            <p class="text-xs text-slate-400">Compute cryptographic checksums in real-time using standard Web Crypto primitives.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <input type="file" id="hash-file-input" class="hidden">
+            <button id="btn-hash-file" type="button" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition flex items-center space-x-1.5">
+              <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+              <span>Hasher un fichier</span>
+            </button>
+          </div>
         </div>
 
         <div class="space-y-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Input String</label>
-            <textarea id="hash-input" rows="3" placeholder="Type or paste any string to hash..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500"></textarea>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <label class="font-semibold text-slate-400">Input String ou Fichier</label>
+              <span id="hash-input-info" class="text-slate-500 text-[11px]">Texte brut ou import de fichier direct</span>
+            </div>
+            <textarea id="hash-input" rows="3" placeholder="Type or paste any string to hash..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-purple-500"></textarea>
           </div>
 
           <div class="space-y-3">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
                 <span class="font-semibold text-purple-400">SHA-256 (Standard)</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-sha256">Copy</button>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300 font-medium" data-for="out-sha256">Copy</button>
               </div>
               <input type="text" readonly id="out-sha256" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
@@ -284,7 +305,7 @@
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
                 <span class="font-semibold text-purple-400">SHA-512 (High Security)</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-sha512">Copy</button>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300 font-medium" data-for="out-sha512">Copy</button>
               </div>
               <input type="text" readonly id="out-sha512" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
@@ -292,7 +313,7 @@
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
                 <span class="font-semibold text-purple-400">SHA-1 (Legacy)</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-sha1">Copy</button>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300 font-medium" data-for="out-sha1">Copy</button>
               </div>
               <input type="text" readonly id="out-sha1" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
@@ -346,10 +367,10 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <h2 class="text-xl font-bold text-white">UUID v4 & Random Secret Key Generator</h2>
-            <p class="text-xs text-slate-400">Generate cryptographically secure random identifiers and API secrets instantly.</p>
+            <p class="text-xs text-slate-400">Generate cryptographically secure random identifiers, API tokens, and passwords.</p>
           </div>
           <button id="btn-gen-all" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold transition">
-            Regenerate Now
+            Regenerate All
           </button>
         </div>
 
@@ -370,12 +391,71 @@
             <input type="text" readonly id="out-hex-key" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
           </div>
 
-          <div>
-            <div class="flex justify-between text-xs text-slate-400 mb-1">
-              <span class="font-semibold text-rose-400">Strong Password (24 characters, high entropy)</span>
-              <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-password">Copy</button>
+          <!-- Strong Password Generator (Unbiased Rejection Sampling) -->
+          <div class="p-3.5 bg-slate-900/60 border border-slate-800 rounded-lg space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <span class="font-semibold text-rose-400 flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-rose-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Strong Password (Unbiased Rejection Sampling)
+              </span>
+              <div class="flex items-center space-x-2">
+                <button id="btn-gen-pwd" type="button" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 transition font-medium">Régénérer</button>
+                <button class="btn-copy-val text-blue-400 hover:text-blue-300 font-medium" data-for="out-password">Copy</button>
+              </div>
             </div>
-            <input type="text" readonly id="out-password" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+
+            <!-- Configuration controls -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+              <div>
+                <div class="flex justify-between text-xs text-slate-300 mb-1">
+                  <span>Longueur : <strong id="pwd-len-val" class="text-rose-400 font-mono">24</strong> caractères</span>
+                  <span class="text-slate-500 text-[11px]">(8 - 128)</span>
+                </div>
+                <input type="range" id="pwd-len-slider" min="8" max="128" value="24" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-300 mb-1">Catégories de caractères :</label>
+                <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+                  <label class="flex items-center space-x-1.5 cursor-pointer">
+                    <input type="checkbox" id="pwd-opt-lower" checked class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
+                    <span>Minuscules (a-z)</span>
+                  </label>
+                  <label class="flex items-center space-x-1.5 cursor-pointer">
+                    <input type="checkbox" id="pwd-opt-upper" checked class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
+                    <span>Majuscules (A-Z)</span>
+                  </label>
+                  <label class="flex items-center space-x-1.5 cursor-pointer">
+                    <input type="checkbox" id="pwd-opt-digits" checked class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
+                    <span>Chiffres (0-9)</span>
+                  </label>
+                  <label class="flex items-center space-x-1.5 cursor-pointer">
+                    <input type="checkbox" id="pwd-opt-symbols" checked class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
+                    <span>Symboles (!@#$...)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Password Output Field -->
+            <div>
+              <input type="text" readonly id="out-password" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-rose-500 select-all">
+            </div>
+
+            <!-- Entropy & Security Bar -->
+            <div id="pwd-meta-bar" class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-slate-400 gap-1 pt-1 border-t border-slate-800/60">
+              <div class="flex items-center space-x-2">
+                <span>Entropie théorique :</span>
+                <span id="pwd-entropy-bits" class="font-mono font-semibold text-rose-300">~157 bits</span>
+                <span id="pwd-entropy-rating" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-950/70 text-emerald-400 border border-emerald-800/60">Très robuste (Haute sécurité)</span>
+              </div>
+              <span class="text-[11px] text-slate-500">Échantillonnage par rejet Web Crypto (zéro biais modulo)</span>
+            </div>
+
+            <!-- Error message for 0 categories -->
+            <div id="pwd-error-alert" class="hidden p-2 rounded bg-rose-950/50 border border-rose-800 text-rose-300 text-xs">
+              Veuillez sélectionner au moins une catégorie de caractères pour générer un mot de passe.
+            </div>
           </div>
         </div>
       </article>
@@ -1078,51 +1158,231 @@
       URL.revokeObjectURL(a.href);
     });
 
-    // 3. Base64
+    // =========================================================================
+    // 3. BASE64 ENCODER & DECODER (Modern UTF-8 & Emoji support via TextEncoder)
+    // =========================================================================
+    const Base64Engine = {
+      encode: function(str) {
+        if (str === null || str === undefined || str === '') return '';
+        const bytes = new TextEncoder().encode(str);
+        let binary = '';
+        const CHUNK_SIZE = 8192;
+        for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
+          const chunk = bytes.subarray(i, i + CHUNK_SIZE);
+          binary += String.fromCharCode.apply(null, chunk);
+        }
+        return btoa(binary);
+      },
+
+      decode: function(b64) {
+        if (b64 === null || b64 === undefined || b64.trim() === '') return '';
+        // Strip internal whitespace & linebreaks
+        const clean = b64.trim().replace(/\s+/g, '');
+
+        if (clean.length % 4 !== 0) {
+          throw new Error('Longueur Base64 invalide : la longueur doit être un multiple exact de 4.');
+        }
+
+        if (!/^[A-Za-z0-9+/]+={0,2}$/.test(clean)) {
+          throw new Error('Caractères Base64 invalides ou format de padding non conforme.');
+        }
+
+        // Padding '=' can only be at the end, at most 2 characters
+        const padIdx = clean.indexOf('=');
+        if (padIdx !== -1 && padIdx < clean.length - 2) {
+          throw new Error('Positionnement incorrect du padding "=" dans la chaîne.');
+        }
+
+        let binary;
+        try {
+          binary = atob(clean);
+        } catch (e) {
+          throw new Error('Échec du décodage Base64 natif : ' + e.message);
+        }
+
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+
+        try {
+          const decoder = new TextDecoder('utf-8', { fatal: true });
+          return decoder.decode(bytes);
+        } catch (e) {
+          throw new Error('Erreur de décodage UTF-8 : séquence d\'octets non reconnue.');
+        }
+      }
+    };
+    window.Base64Engine = Base64Engine;
+
     const b64Input = document.getElementById('b64-input');
     const b64Output = document.getElementById('b64-output');
+    const b64StatusMsg = document.getElementById('b64-status-msg');
+
+    if (b64Input) {
+      b64Input.addEventListener('input', () => {
+        const lenEl = document.getElementById('b64-input-len');
+        if (lenEl) {
+          lenEl.textContent = `${b64Input.value.length} caractère${b64Input.value.length > 1 ? 's' : ''}`;
+        }
+      });
+    }
 
     document.getElementById('btn-b64-encode').addEventListener('click', () => {
       try {
-        b64Output.value = btoa(unescape(encodeURIComponent(b64Input.value)));
+        b64Output.value = Base64Engine.encode(b64Input.value);
+        if (b64StatusMsg) {
+          b64StatusMsg.textContent = 'Encodé avec succès';
+          b64StatusMsg.className = 'text-blue-400 text-[11px]';
+        }
       } catch (e) {
-        b64Output.value = 'Encoding error: ' + e.message;
+        b64Output.value = 'Erreur d\'encodage : ' + e.message;
+        if (b64StatusMsg) {
+          b64StatusMsg.textContent = 'Erreur d\'encodage';
+          b64StatusMsg.className = 'text-rose-400 text-[11px]';
+        }
       }
     });
 
     document.getElementById('btn-b64-decode').addEventListener('click', () => {
       try {
-        b64Output.value = decodeURIComponent(escape(atob(b64Input.value.trim())));
+        b64Output.value = Base64Engine.decode(b64Input.value);
+        if (b64StatusMsg) {
+          b64StatusMsg.textContent = 'Décodé avec succès';
+          b64StatusMsg.className = 'text-emerald-400 text-[11px]';
+        }
       } catch (e) {
-        b64Output.value = 'Invalid Base64 string';
+        b64Output.value = 'Erreur de décodage : ' + e.message;
+        if (b64StatusMsg) {
+          b64StatusMsg.textContent = 'Erreur Base64';
+          b64StatusMsg.className = 'text-rose-400 text-[11px]';
+        }
       }
     });
 
     document.getElementById('btn-b64-copy').addEventListener('click', (e) => copyText(b64Output.value, e.target));
 
-    // 4. Crypto Hash Generator (Native Web Crypto API)
+    // =========================================================================
+    // 4. CRYPTO HASH GENERATOR (Anti-Race Condition, Sequence ID, File Hashing)
+    // =========================================================================
+    const HashEngine = {
+      sequenceId: 0,
+
+      bufferToHex: function(buf) {
+        const arr = new Uint8Array(buf);
+        let hex = '';
+        for (let i = 0; i < arr.length; i++) {
+          hex += arr[i].toString(16).padStart(2, '0');
+        }
+        return hex;
+      },
+
+      computeHashes: async function(dataBuffer, targetSeq) {
+        const [sha256Buf, sha512Buf, sha1Buf] = await Promise.all([
+          crypto.subtle.digest('SHA-256', dataBuffer),
+          crypto.subtle.digest('SHA-512', dataBuffer),
+          crypto.subtle.digest('SHA-1', dataBuffer)
+        ]);
+        return {
+          sha256: HashEngine.bufferToHex(sha256Buf),
+          sha512: HashEngine.bufferToHex(sha512Buf),
+          sha1: HashEngine.bufferToHex(sha1Buf),
+          seq: targetSeq
+        };
+      }
+    };
+    window.HashEngine = HashEngine;
+
     const hashInput = document.getElementById('hash-input');
-    async function computeHashes() {
-      const text = hashInput.value;
-      if (!text) {
-        document.getElementById('out-sha256').value = '';
-        document.getElementById('out-sha512').value = '';
-        document.getElementById('out-sha1').value = '';
+    const hashLoadingBadge = document.getElementById('hash-loading-badge');
+    const hashFileInput = document.getElementById('hash-file-input');
+    const btnHashFile = document.getElementById('btn-hash-file');
+    const hashInputInfo = document.getElementById('hash-input-info');
+
+    async function triggerHashComputation(bufferOrString, isFile = false) {
+      const currentSeq = ++HashEngine.sequenceId;
+      const out256 = document.getElementById('out-sha256');
+      const out512 = document.getElementById('out-sha512');
+      const out1 = document.getElementById('out-sha1');
+
+      if (bufferOrString === '' || bufferOrString === null || bufferOrString === undefined) {
+        if (hashLoadingBadge) hashLoadingBadge.classList.add('hidden');
+        if (out256) out256.value = '';
+        if (out512) out512.value = '';
+        if (out1) out1.value = '';
         return;
       }
-      const enc = new TextEncoder();
-      const data = enc.encode(text);
 
-      async function hash(algo) {
-        const buf = await crypto.subtle.digest(algo, data);
-        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      if (hashLoadingBadge) hashLoadingBadge.classList.remove('hidden');
+
+      try {
+        let buffer;
+        if (isFile && bufferOrString instanceof ArrayBuffer) {
+          buffer = bufferOrString;
+        } else if (typeof bufferOrString === 'string') {
+          buffer = new TextEncoder().encode(bufferOrString);
+        } else {
+          buffer = bufferOrString;
+        }
+
+        const results = await HashEngine.computeHashes(buffer, currentSeq);
+
+        // Anti-Race Condition check: discard if a newer calculation was triggered
+        if (currentSeq !== HashEngine.sequenceId) {
+          return;
+        }
+
+        if (out256) out256.value = results.sha256;
+        if (out512) out512.value = results.sha512;
+        if (out1) out1.value = results.sha1;
+      } catch (err) {
+        if (currentSeq === HashEngine.sequenceId) {
+          const errText = 'Erreur cryptographique : ' + (err.message || 'Échec');
+          if (out256) out256.value = errText;
+          if (out512) out512.value = errText;
+          if (out1) out1.value = errText;
+        }
+      } finally {
+        if (currentSeq === HashEngine.sequenceId && hashLoadingBadge) {
+          hashLoadingBadge.classList.add('hidden');
+        }
       }
-
-      document.getElementById('out-sha256').value = await hash('SHA-256');
-      document.getElementById('out-sha512').value = await hash('SHA-512');
-      document.getElementById('out-sha1').value = await hash('SHA-1');
     }
-    hashInput.addEventListener('input', computeHashes);
+
+    if (hashInput) {
+      hashInput.addEventListener('input', () => {
+        if (hashInputInfo) hashInputInfo.textContent = 'Texte brut direct';
+        triggerHashComputation(hashInput.value, false);
+      });
+    }
+
+    if (btnHashFile && hashFileInput) {
+      btnHashFile.addEventListener('click', () => hashFileInput.click());
+      hashFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+
+        const sizeFormatted = file.size > 1048576 
+          ? (file.size / 1048576).toFixed(2) + ' Mo' 
+          : (file.size / 1024).toFixed(1) + ' Ko';
+        
+        if (hashInputInfo) {
+          hashInputInfo.textContent = `Fichier : ${file.name} (${sizeFormatted})`;
+        }
+        if (hashInput) {
+          hashInput.value = `[Fichier sélectionné : ${file.name} (${sizeFormatted})]`;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          triggerHashComputation(evt.target.result, true);
+        };
+        reader.onerror = function() {
+          if (hashInputInfo) hashInputInfo.textContent = 'Erreur de lecture du fichier.';
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
 
     // 5. URL & Slug
     const urlInput = document.getElementById('url-input');
@@ -1144,33 +1404,197 @@
     }
     urlInput.addEventListener('input', updateURLTools);
 
-    // 6. UUID & Random Key Generator
-    function generateSecrets() {
-      // UUID v4
-      const uuid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-      );
-      document.getElementById('out-uuid').value = uuid;
+    // =========================================================================
+    // 6. CRYPTOGRAPHIC SECRET & PASSWORD GENERATOR (Without Modulo Bias)
+    // =========================================================================
+    const CryptoSecretEngine = {
+      PWD_CHARSETS: {
+        lower: 'abcdefghijklmnopqrstuvwxyz',
+        upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        digits: '0123456789',
+        symbols: '!@#$%^&*()-_=+[]{}|;:,.<>?/~'
+      },
 
-      // 32-byte Hex Key
-      const keyBytes = new Uint8Array(32);
-      crypto.getRandomValues(keyBytes);
-      document.getElementById('out-hex-key').value = Array.from(keyBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+      // Unbiased Rejection Sampling over range [0, range - 1]
+      getRandomIndexWithoutBias: function(range) {
+        if (range <= 0) throw new Error('Range must be positive');
+        if (range === 1) return 0;
 
-      // Password
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+';
-      const pwdBytes = new Uint8Array(24);
-      crypto.getRandomValues(pwdBytes);
-      let pwd = '';
-      for (let i = 0; i < 24; i++) {
-        pwd += chars[pwdBytes[i] % chars.length];
+        if (range <= 256) {
+          const limit = 256 - (256 % range);
+          const buf = new Uint8Array(1);
+          while (true) {
+            crypto.getRandomValues(buf);
+            if (buf[0] < limit) {
+              return buf[0] % range;
+            }
+          }
+        } else {
+          const limit = 4294967296 - (4294967296 % range);
+          const buf = new Uint32Array(1);
+          while (true) {
+            crypto.getRandomValues(buf);
+            if (buf[0] < limit) {
+              return buf[0] % range;
+            }
+          }
+        }
+      },
+
+      calculateEntropy: function(length, poolSize) {
+        if (!poolSize || poolSize <= 0 || !length || length <= 0) {
+          return { bits: 0, rating: 'Nulle', classNames: 'bg-rose-950/70 text-rose-400 border border-rose-800/60' };
+        }
+        const bits = Math.round(length * Math.log2(poolSize) * 10) / 10;
+        let rating = 'Faible';
+        let classNames = 'bg-rose-950/70 text-rose-400 border border-rose-800/60';
+
+        if (bits >= 80) {
+          rating = 'Très robuste (Haute sécurité)';
+          classNames = 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/60';
+        } else if (bits >= 60) {
+          rating = 'Robuste';
+          classNames = 'bg-blue-950/70 text-blue-400 border border-blue-800/60';
+        } else if (bits >= 45) {
+          rating = 'Moyen';
+          classNames = 'bg-amber-950/70 text-amber-400 border border-amber-800/60';
+        }
+        return { bits, rating, classNames };
+      },
+
+      generatePassword: function(options = {}) {
+        const length = Math.max(8, Math.min(128, parseInt(options.length, 10) || 24));
+        const categories = [];
+
+        if (options.lower !== false) categories.push(CryptoSecretEngine.PWD_CHARSETS.lower);
+        if (options.upper !== false) categories.push(CryptoSecretEngine.PWD_CHARSETS.upper);
+        if (options.digits !== false) categories.push(CryptoSecretEngine.PWD_CHARSETS.digits);
+        if (options.symbols !== false) categories.push(CryptoSecretEngine.PWD_CHARSETS.symbols);
+
+        if (categories.length === 0) {
+          throw new Error('Veuillez sélectionner au moins une catégorie de caractères.');
+        }
+
+        const pool = categories.join('');
+        const chars = [];
+
+        // 1. Guaranteed presence: take 1 char from each selected category
+        if (length >= categories.length) {
+          for (const cat of categories) {
+            const idx = CryptoSecretEngine.getRandomIndexWithoutBias(cat.length);
+            chars.push(cat[idx]);
+          }
+        }
+
+        // 2. Fill remaining slots from combined pool using rejection sampling
+        while (chars.length < length) {
+          const idx = CryptoSecretEngine.getRandomIndexWithoutBias(pool.length);
+          chars.push(pool[idx]);
+        }
+
+        // 3. Cryptographic Fisher-Yates shuffle with rejection sampling
+        for (let i = chars.length - 1; i > 0; i--) {
+          const j = CryptoSecretEngine.getRandomIndexWithoutBias(i + 1);
+          const tmp = chars[i];
+          chars[i] = chars[j];
+          chars[j] = tmp;
+        }
+
+        const entropy = CryptoSecretEngine.calculateEntropy(length, pool.length);
+
+        return {
+          password: chars.join(''),
+          length: length,
+          poolSize: pool.length,
+          entropyBits: entropy.bits,
+          rating: entropy.rating,
+          ratingClass: entropy.classNames
+        };
+      },
+
+      generateUuid: function() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+      },
+
+      generateHexKey: function(byteLength = 32) {
+        const keyBytes = new Uint8Array(byteLength);
+        crypto.getRandomValues(keyBytes);
+        return Array.from(keyBytes).map(b => b.toString(16).padStart(2, '0')).join('');
       }
-      document.getElementById('out-password').value = pwd;
+    };
+    window.CryptoSecretEngine = CryptoSecretEngine;
+
+    // UI wiring for Password Generator
+    const pwdSlider = document.getElementById('pwd-len-slider');
+    const pwdLenVal = document.getElementById('pwd-len-val');
+    const pwdOptLower = document.getElementById('pwd-opt-lower');
+    const pwdOptUpper = document.getElementById('pwd-opt-upper');
+    const pwdOptDigits = document.getElementById('pwd-opt-digits');
+    const pwdOptSymbols = document.getElementById('pwd-opt-symbols');
+    const outPassword = document.getElementById('out-password');
+    const pwdEntropyBits = document.getElementById('pwd-entropy-bits');
+    const pwdEntropyRating = document.getElementById('pwd-entropy-rating');
+    const pwdErrorAlert = document.getElementById('pwd-error-alert');
+    const pwdMetaBar = document.getElementById('pwd-meta-bar');
+
+    function updatePasswordUI() {
+      const length = parseInt(pwdSlider ? pwdSlider.value : 24, 10);
+      if (pwdLenVal) pwdLenVal.textContent = length;
+
+      const opts = {
+        length: length,
+        lower: pwdOptLower ? pwdOptLower.checked : true,
+        upper: pwdOptUpper ? pwdOptUpper.checked : true,
+        digits: pwdOptDigits ? pwdOptDigits.checked : true,
+        symbols: pwdOptSymbols ? pwdOptSymbols.checked : true
+      };
+
+      try {
+        const result = CryptoSecretEngine.generatePassword(opts);
+        if (outPassword) outPassword.value = result.password;
+        if (pwdEntropyBits) pwdEntropyBits.textContent = `~${result.entropyBits} bits`;
+        if (pwdEntropyRating) {
+          pwdEntropyRating.textContent = result.rating;
+          pwdEntropyRating.className = `px-2 py-0.5 rounded text-[11px] font-semibold ${result.ratingClass}`;
+        }
+        if (pwdErrorAlert) pwdErrorAlert.classList.add('hidden');
+        if (pwdMetaBar) pwdMetaBar.classList.remove('hidden');
+      } catch (err) {
+        if (outPassword) outPassword.value = '';
+        if (pwdErrorAlert) {
+          pwdErrorAlert.textContent = err.message;
+          pwdErrorAlert.classList.remove('hidden');
+        }
+        if (pwdMetaBar) pwdMetaBar.classList.add('hidden');
+      }
     }
-    document.getElementById('btn-gen-all').addEventListener('click', generateSecrets);
+
+    if (pwdSlider) {
+      pwdSlider.addEventListener('input', updatePasswordUI);
+    }
+    [pwdOptLower, pwdOptUpper, pwdOptDigits, pwdOptSymbols].forEach(cb => {
+      if (cb) cb.addEventListener('change', updatePasswordUI);
+    });
+
+    const btnGenPwd = document.getElementById('btn-gen-pwd');
+    if (btnGenPwd) {
+      btnGenPwd.addEventListener('click', updatePasswordUI);
+    }
+
+    function generateAllSecrets() {
+      const outUuid = document.getElementById('out-uuid');
+      const outHexKey = document.getElementById('out-hex-key');
+      if (outUuid) outUuid.value = CryptoSecretEngine.generateUuid();
+      if (outHexKey) outHexKey.value = CryptoSecretEngine.generateHexKey(32);
+      updatePasswordUI();
+    }
+
+    document.getElementById('btn-gen-all').addEventListener('click', generateAllSecrets);
 
     // Init defaults
-    generateSecrets();
+    generateAllSecrets();
     urlInput.value = "https://svl.gumroad.com/l/qzpfma?category=automation suite";
     updateURLTools();
 
