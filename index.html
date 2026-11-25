@@ -181,17 +181,23 @@
             <h1 class="text-xl font-bold text-white">JSON Formatter, Validator & Minifier</h1>
             <p class="text-xs text-slate-400">Clean, validate, and minify messy JSON structures safely inside your browser.</p>
           </div>
-          <div class="flex items-center space-x-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <input type="file" id="json-file-input" accept=".json,application/json" class="hidden">
+            <button id="btn-json-import" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Import File</button>
             <button id="btn-json-format-2" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">2 Spaces</button>
             <button id="btn-json-format-4" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">4 Spaces</button>
             <button id="btn-json-minify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Minify</button>
+            <button id="btn-json-download" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Download</button>
             <button id="btn-json-copy" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition">Copy</button>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Input JSON</label>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-semibold text-slate-400">Input JSON</label>
+              <span id="json-size-info" class="text-[11px] text-slate-500 font-mono">0 octet</span>
+            </div>
             <textarea id="json-input" rows="16" placeholder='Paste your raw JSON here... e.g. {"name":"Arthur","tools":10}' class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 resize-y"></textarea>
           </div>
           <div>
@@ -590,6 +596,20 @@
             <pre id="spam-json-output" class="w-full bg-slate-900/90 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 overflow-x-auto"></pre>
           </div>
         </div>
+
+        <!-- Privacy & Verification Limits Notice -->
+        <div class="p-3 bg-slate-900/70 border border-slate-800 rounded-lg space-y-1.5 text-[11px] text-slate-400">
+          <div class="flex items-center space-x-1.5 text-slate-300 font-semibold">
+            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Confidentialité &amp; Limites du service</span>
+          </div>
+          <p>
+            <strong>Transmission externe :</strong> Votre adresse email est transmise de manière sécurisée via HTTPS au service tiers <span class="font-mono text-slate-300">SpamShield API (Render Cloud)</span> pour analyse syntaxique, vérification des serveurs DNS MX et détection de domaines jetables. Aucune donnée n'est stockée ni cédée à des tiers.
+          </p>
+          <p class="text-slate-400">
+            <strong>Limites techniques :</strong> Cette vérification contrôle la conformité RFC et la validité du domaine hébergeur. Elle ne constitue <em>en aucun cas une garantie absolue d'existence ou de délivrabilité d'une boîte aux lettres spécifique</em> (aucun ping SMTP intrusif n'est réalisé afin de respecter la vie privée des serveurs de messagerie).
+          </p>
+        </div>
       </article>
 
       <!-- TOOL 9: HTML & CSS Formatter / Minifier -->
@@ -599,10 +619,13 @@
             <h1 class="text-xl font-bold text-white">HTML &amp; CSS Formatter &amp; Minifier</h1>
             <p class="text-xs text-slate-400">Beautify or minify messy HTML markup and CSS stylesheets instantly with zero server transmission.</p>
           </div>
-          <div class="flex items-center space-x-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <input type="file" id="codeformat-file-input" accept=".html,.htm,.css" class="hidden">
+            <button id="btn-codeformat-import" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Import File</button>
             <button id="btn-html-beautify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Beautify HTML</button>
             <button id="btn-css-beautify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Beautify CSS</button>
             <button id="btn-code-minify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Minify</button>
+            <button id="btn-codeformat-download" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Download</button>
             <button id="btn-code-copy" class="px-3 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-500 text-white rounded font-medium transition">Copy</button>
           </div>
         </div>
@@ -862,27 +885,179 @@
       });
     });
 
-    // 1. JSON Formatter
+    // =========================================================================
+    // 1. JSON FORMATTER, VALIDATOR & MINIFIER (With Line/Column Error Pointer)
+    // =========================================================================
+    const JsonEngine = {
+      locateSyntaxError: function(str) {
+        let i = 0, line = 1, col = 1;
+        function nextChar() {
+          const ch = str[i++];
+          if (ch === '\n') { line++; col = 1; } else { col++; }
+          return ch;
+        }
+        function peekChar() { return str[i]; }
+        function skipWhitespace() { while (i < str.length && /\s/.test(str[i])) nextChar(); }
+        function parseValue() {
+          skipWhitespace();
+          if (i >= str.length) throw new Error('Fin inattendue du flux JSON');
+          const ch = peekChar();
+          if (ch === '{') return parseObject();
+          if (ch === '[') return parseArray();
+          if (ch === '"') return parseString();
+          if (ch === '-' || (ch >= '0' && ch <= '9')) return parseNumber();
+          if (str.startsWith('true', i)) { for (let k = 0; k < 4; k++) nextChar(); return true; }
+          if (str.startsWith('false', i)) { for (let k = 0; k < 5; k++) nextChar(); return false; }
+          if (str.startsWith('null', i)) { for (let k = 0; k < 4; k++) nextChar(); return null; }
+          throw new Error(`Caractère inattendu '${ch}'`);
+        }
+        function parseString() {
+          nextChar();
+          while (i < str.length) {
+            const ch = nextChar();
+            if (ch === '"') return;
+            if (ch === '\\') nextChar();
+          }
+          throw new Error('Chaîne non fermée');
+        }
+        function parseNumber() {
+          const start = i;
+          if (peekChar() === '-') nextChar();
+          while (i < str.length && /[0-9.eE+-]/.test(peekChar())) nextChar();
+          const n = Number(str.slice(start, i));
+          if (isNaN(n)) throw new Error('Nombre invalide');
+        }
+        function parseObject() {
+          nextChar();
+          skipWhitespace();
+          if (peekChar() === '}') { nextChar(); return; }
+          while (i < str.length) {
+            skipWhitespace();
+            if (peekChar() !== '"') throw new Error(`Nom de propriété attendu entre guillemets mais reçu '${peekChar() || 'EOF'}'`);
+            parseString();
+            skipWhitespace();
+            if (peekChar() !== ':') throw new Error(`Caractère ':' attendu mais reçu '${peekChar() || 'EOF'}'`);
+            nextChar();
+            parseValue();
+            skipWhitespace();
+            if (peekChar() === '}') { nextChar(); return; }
+            if (peekChar() === ',') { nextChar(); continue; }
+            throw new Error(`Séparateur ',' ou '}' attendu mais reçu '${peekChar() || 'EOF'}'`);
+          }
+          throw new Error('Objet non fermé');
+        }
+        function parseArray() {
+          nextChar();
+          skipWhitespace();
+          if (peekChar() === ']') { nextChar(); return; }
+          while (i < str.length) {
+            parseValue();
+            skipWhitespace();
+            if (peekChar() === ']') { nextChar(); return; }
+            if (peekChar() === ',') { nextChar(); continue; }
+            throw new Error(`Séparateur ',' ou ']' attendu mais reçu '${peekChar() || 'EOF'}'`);
+          }
+          throw new Error('Tableau non fermé');
+        }
+
+        try {
+          parseValue();
+          skipWhitespace();
+          if (i < str.length) throw new Error(`Caractères superflus en fin de JSON '${peekChar()}'`);
+          return { valid: true };
+        } catch (err) {
+          return { valid: false, line, col, detail: err.message };
+        }
+      },
+
+      parseWithDetails: function(str) {
+        if (!str || !str.trim()) {
+          return { valid: true, empty: true, data: null, summary: 'Ready' };
+        }
+        try {
+          const parsed = JSON.parse(str);
+          let summary = 'JSON Valide';
+          if (Array.isArray(parsed)) {
+            summary = `JSON Valide (Tableau de ${parsed.length} élément${parsed.length > 1 ? 's' : ''})`;
+          } else if (parsed !== null && typeof parsed === 'object') {
+            const keysCount = Object.keys(parsed).length;
+            summary = `JSON Valide (Objet de ${keysCount} clé${keysCount > 1 ? 's' : ''})`;
+          } else {
+            summary = `JSON Valide (Valeur primitive : ${typeof parsed})`;
+          }
+          return { valid: true, data: parsed, summary };
+        } catch (err) {
+          let line = null, col = null;
+          const matchLineCol = err.message.match(/line\s+(\d+)\s+column\s+(\d+)/i);
+          if (matchLineCol) {
+            line = parseInt(matchLineCol[1], 10);
+            col = parseInt(matchLineCol[2], 10);
+          } else {
+            const matchPos = err.message.match(/at\s+position\s+(\d+)/i);
+            if (matchPos) {
+              const pos = parseInt(matchPos[1], 10);
+              const upToPos = str.slice(0, pos);
+              const lines = upToPos.split('\n');
+              line = lines.length;
+              col = lines[lines.length - 1].length + 1;
+            } else {
+              // Resilient precise scanner fallback
+              const scanRes = JsonEngine.locateSyntaxError(str);
+              if (!scanRes.valid) {
+                line = scanRes.line;
+                col = scanRes.col;
+              }
+            }
+          }
+          let formattedMsg = err.message;
+          if (line !== null && col !== null && !err.message.includes('line')) {
+            formattedMsg = `${err.message} (Ligne ${line}, Colonne ${col})`;
+          }
+          return { valid: false, error: err, message: formattedMsg, line, col };
+        }
+      },
+
+      format: function(str, space = 2) {
+        const res = JsonEngine.parseWithDetails(str);
+        if (!res.valid) {
+          throw new Error(res.message);
+        }
+        if (res.empty) return '';
+        return JSON.stringify(res.data, null, space);
+      }
+    };
+    window.JsonEngine = JsonEngine;
+
     const jsonInput = document.getElementById('json-input');
     const jsonOutput = document.getElementById('json-output');
     const jsonStatus = document.getElementById('json-status');
+    const jsonFileInput = document.getElementById('json-file-input');
+    const btnJsonImport = document.getElementById('btn-json-import');
+    const btnJsonDownload = document.getElementById('btn-json-download');
+    const jsonSizeInfo = document.getElementById('json-size-info');
+
+    function updateJsonSize() {
+      if (!jsonSizeInfo || !jsonInput) return;
+      const bytes = new TextEncoder().encode(jsonInput.value).length;
+      jsonSizeInfo.textContent = bytes > 1024 ? (bytes / 1024).toFixed(1) + ' Ko' : bytes + ' octets';
+    }
 
     function formatJSON(space) {
-      try {
-        if (!jsonInput.value.trim()) {
-          jsonOutput.value = '';
-          jsonStatus.textContent = 'Ready';
-          jsonStatus.className = 'text-xs text-slate-500 font-mono';
-          return;
-        }
-        const parsed = JSON.parse(jsonInput.value);
-        jsonOutput.value = JSON.stringify(parsed, null, space);
-        jsonStatus.textContent = 'Valid JSON';
-        jsonStatus.className = 'text-xs text-emerald-400 font-mono';
-      } catch (e) {
+      if (!jsonInput.value.trim()) {
         jsonOutput.value = '';
-        jsonStatus.textContent = 'Error: ' + e.message;
-        jsonStatus.className = 'text-xs text-rose-400 font-mono';
+        jsonStatus.textContent = 'Ready';
+        jsonStatus.className = 'text-xs text-slate-500 font-mono';
+        return;
+      }
+      const res = JsonEngine.parseWithDetails(jsonInput.value);
+      if (res.valid) {
+        jsonOutput.value = JSON.stringify(res.data, null, space);
+        jsonStatus.textContent = res.summary;
+        jsonStatus.className = 'text-xs text-emerald-400 font-mono';
+      } else {
+        jsonOutput.value = '';
+        jsonStatus.textContent = 'Erreur : ' + res.message;
+        jsonStatus.className = 'text-xs text-rose-400 font-mono font-medium';
       }
     }
 
@@ -890,7 +1065,42 @@
     document.getElementById('btn-json-format-4').addEventListener('click', () => formatJSON(4));
     document.getElementById('btn-json-minify').addEventListener('click', () => formatJSON(0));
     document.getElementById('btn-json-copy').addEventListener('click', (e) => copyText(jsonOutput.value, e.target));
-    jsonInput.addEventListener('input', () => formatJSON(2));
+
+    let jsonDebounceTimer = null;
+    jsonInput.addEventListener('input', () => {
+      updateJsonSize();
+      clearTimeout(jsonDebounceTimer);
+      // For large inputs (> 100 KB), debounce to 400ms to preserve UI responsiveness
+      const delay = jsonInput.value.length > 100000 ? 400 : 150;
+      jsonDebounceTimer = setTimeout(() => formatJSON(2), delay);
+    });
+
+    if (btnJsonImport && jsonFileInput) {
+      btnJsonImport.addEventListener('click', () => jsonFileInput.click());
+      jsonFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          jsonInput.value = evt.target.result;
+          updateJsonSize();
+          formatJSON(2);
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    if (btnJsonDownload) {
+      btnJsonDownload.addEventListener('click', () => {
+        if (!jsonOutput.value) return;
+        const blob = new Blob([jsonOutput.value], { type: 'application/json;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'formatted.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+    }
 
     // 2. JSON <-> CSV (RFC 4180 Compliant Engine with Security & Validation)
     const csvInput = document.getElementById('csv-input');
@@ -1384,23 +1594,75 @@
       });
     }
 
-    // 5. URL & Slug
+    // =========================================================================
+    // 5. URL & SEO SLUG GENERATOR (Unicode Normalization & Ligatures œ, æ)
+    // =========================================================================
+    const UrlEngine = {
+      LIGATURES: {
+        'œ': 'oe', 'Œ': 'oe',
+        'æ': 'ae', 'Æ': 'ae',
+        'ß': 'ss',
+        'ø': 'o',  'Ø': 'o',
+        'å': 'a',  'Å': 'a',
+        'ç': 'c',  'Ç': 'c',
+        'ñ': 'n',  'Ñ': 'n',
+        'ð': 'd',  'Ð': 'd',
+        'þ': 'th', 'Þ': 'th'
+      },
+
+      generateSlug: function(str) {
+        if (!str) return '';
+        let text = String(str);
+
+        // 1. Convert ligatures (French œ, æ, German ß, Nordic ø, å, etc.)
+        for (const [lig, rep] of Object.entries(UrlEngine.LIGATURES)) {
+          text = text.replaceAll(lig, rep);
+        }
+
+        // 2. Unicode normalization (NFD separates accents from base characters)
+        text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+        // 3. Convert apostrophes to space for clean French SEO slugs (d'outils -> d-outils)
+        text = text.replace(/['’]/g, ' ');
+
+        // 4. Lowercase and sanitize for strict SEO rules
+        return text
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s-_]/g, '')   // Strip special non-ASCII characters
+          .replace(/[\s_-]+/g, '-')        // Collapse consecutive spaces & dashes
+          .replace(/^-+|-+$/g, '');        // Strip leading & trailing dashes
+      },
+
+      encodeUri: function(str) {
+        if (!str) return '';
+        return encodeURIComponent(str);
+      },
+
+      decodeUri: function(str) {
+        if (!str) return '';
+        try {
+          return { success: true, result: decodeURIComponent(str) };
+        } catch (err) {
+          return { success: false, error: 'Séquence URI mal formée (ex: % non échappé ou invalide)', original: str };
+        }
+      }
+    };
+    window.UrlEngine = UrlEngine;
+
     const urlInput = document.getElementById('url-input');
     function updateURLTools() {
       const val = urlInput.value;
-      document.getElementById('out-url-encode').value = encodeURIComponent(val);
-      try {
-        document.getElementById('out-url-decode').value = decodeURIComponent(val);
-      } catch {
-        document.getElementById('out-url-decode').value = val;
+      document.getElementById('out-url-encode').value = UrlEngine.encodeUri(val);
+
+      const decodedRes = UrlEngine.decodeUri(val);
+      if (decodedRes.success) {
+        document.getElementById('out-url-decode').value = decodedRes.result;
+      } else {
+        document.getElementById('out-url-decode').value = `[Erreur] ${decodedRes.error}`;
       }
-      // Slug
-      document.getElementById('out-slug').value = val
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+
+      document.getElementById('out-slug').value = UrlEngine.generateSlug(val);
     }
     urlInput.addEventListener('input', updateURLTools);
 
@@ -1754,7 +2016,58 @@
       renderSaasTable();
     })();
 
-    // TOOL 8: SpamShield Email & Fraud Checker
+    // =========================================================================
+    // 8. SPAMSHIELD EMAIL & FRAUD CHECKER (Timeout, Network/CORS/JSON Handling)
+    // =========================================================================
+    const SpamShieldEngine = {
+      API_ENDPOINT: 'https://spamshield-api-8kdt.onrender.com/v1/verify',
+      TIMEOUT_MS: 10000,
+
+      verifyEmail: async function(email, timeoutMs = 10000) {
+        const cleanEmail = (email || '').trim();
+        if (!cleanEmail) {
+          throw new Error('Veuillez saisir une adresse email.');
+        }
+
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+        try {
+          const resp = await fetch(`${SpamShieldEngine.API_ENDPOINT}?email=${encodeURIComponent(cleanEmail)}`, {
+            signal: controller.signal
+          });
+          clearTimeout(timer);
+
+          let data;
+          try {
+            data = await resp.json();
+          } catch (jsonErr) {
+            throw new Error(`Réponse API non valide : impossible d'analyser le corps JSON (HTTP ${resp.status}).`);
+          }
+
+          if (!resp.ok) {
+            const detailMsg = data.detail || resp.statusText || 'Erreur API';
+            const err = new Error(`Erreur HTTP ${resp.status} : ${detailMsg}`);
+            err.status = resp.status;
+            err.data = data;
+            throw err;
+          }
+
+          return { success: true, data };
+        } catch (err) {
+          clearTimeout(timer);
+          if (err.name === 'AbortError') {
+            throw new Error(`Délai d'attente dépassé (Timeout ${timeoutMs / 1000}s) : le serveur met trop de temps à répondre (mise en veille Render possible).`);
+          }
+          if (err instanceof TypeError && err.message.toLowerCase().includes('fetch')) {
+            throw new Error("Erreur réseau ou blocage CORS : impossible de joindre le serveur SpamShield. Vérifiez votre connexion.");
+          }
+          throw err;
+        }
+      }
+    };
+    window.SpamShieldEngine = SpamShieldEngine;
+
     (function initSpamShieldTool() {
       const input = document.getElementById('spam-email-input');
       const btn = document.getElementById('btn-spam-check');
@@ -1767,70 +2080,165 @@
 
       if (!input || !btn) return;
 
-      async function verifyEmail(email) {
+      async function handleVerify(email) {
         const cleanEmail = (email || '').trim();
         if (!cleanEmail) return;
 
         btn.disabled = true;
-        btn.textContent = 'Checking...';
+        btn.textContent = 'Vérification en cours...';
         resultBox.classList.remove('hidden');
         summaryBanner.className = 'p-3 rounded-lg border border-slate-700 bg-slate-900 text-slate-300 text-xs flex flex-wrap items-center justify-between gap-2';
-        statusText.textContent = 'Contacting SpamShield API (waking up server if idle)...';
+        statusText.textContent = 'Interrogation de l\'API SpamShield (réveil du serveur si inactif)...';
         metaText.textContent = '';
-        jsonOutput.textContent = 'Loading...';
+        jsonOutput.textContent = 'Chargement de la réponse en cours...';
 
         try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 30000);
-          const resp = await fetch(`https://spamshield-api-8kdt.onrender.com/v1/verify?email=${encodeURIComponent(cleanEmail)}`, {
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-
-          const data = await resp.json();
+          const { data } = await SpamShieldEngine.verifyEmail(cleanEmail, 12000);
           jsonOutput.textContent = JSON.stringify(data, null, 2);
-
-          if (!resp.ok) {
-            summaryBanner.className = 'p-3 rounded-lg border border-amber-700/60 bg-amber-950/40 text-amber-200 text-xs flex flex-wrap items-center justify-between gap-2';
-            statusText.textContent = `Notice (HTTP ${resp.status}): ${data.detail || 'Rate limit or API error'}`;
-            metaText.textContent = 'Upgrade to Pro API Key for unlimited checks';
-            return;
-          }
 
           const st = (data.status || 'unknown').toLowerCase();
           if (st === 'valid') {
             summaryBanner.className = 'p-3 rounded-lg border border-emerald-700/60 bg-emerald-950/40 text-emerald-200 text-xs flex flex-wrap items-center justify-between gap-2';
-            statusText.textContent = `VALID EMAIL (${data.email})`;
+            statusText.textContent = `EMAIL SYNTAXIQUEMENT VALIDE & DOMAINE ACTIF (${data.email})`;
           } else {
             summaryBanner.className = 'p-3 rounded-lg border border-red-700/60 bg-red-950/40 text-red-200 text-xs flex flex-wrap items-center justify-between gap-2';
-            statusText.textContent = `RISK DETECTED: ${st.toUpperCase()} (${data.email})`;
+            statusText.textContent = `RISQUE DÉTECTÉ : ${st.toUpperCase()} (${data.email})`;
           }
-          metaText.textContent = `Risk Score: ${data.risk_score ?? 'N/A'}/100 | Disposable: ${data.is_disposable ? 'YES' : 'NO'} | MX Valid: ${data.has_mx ? 'YES' : 'NO'}`;
+          metaText.textContent = `Score de risque : ${data.risk_score ?? 'N/A'}/100 | Jetable (Burner) : ${data.is_disposable ? 'OUI' : 'NON'} | MX Valide : ${data.has_mx ? 'OUI' : 'NON'}`;
         } catch (err) {
           summaryBanner.className = 'p-3 rounded-lg border border-red-700/60 bg-red-950/40 text-red-200 text-xs flex flex-wrap items-center justify-between gap-2';
-          statusText.textContent = 'Request failed or timed out.';
-          metaText.textContent = err.message || 'Network error';
-          jsonOutput.textContent = JSON.stringify({ error: err.message || 'Timeout' }, null, 2);
+          statusText.textContent = 'Échec de la requête : ' + err.message;
+          metaText.textContent = err.status ? `Code HTTP ${err.status}` : 'Erreur de transmission';
+          jsonOutput.textContent = JSON.stringify({ error: err.message, status: err.status || null }, null, 2);
         } finally {
           btn.disabled = false;
           btn.textContent = 'Verify Email Live';
         }
       }
 
-      btn.addEventListener('click', () => verifyEmail(input.value));
+      btn.addEventListener('click', () => handleVerify(input.value));
       input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') verifyEmail(input.value);
+        if (e.key === 'Enter') handleVerify(input.value);
       });
       sampleBtns.forEach(b => {
         b.addEventListener('click', () => {
           const sample = b.getAttribute('data-email');
           input.value = sample;
-          verifyEmail(sample);
+          handleVerify(sample);
         });
       });
     })();
 
-    // TOOL 9: HTML & CSS Formatter / Minifier
+    // =========================================================================
+    // 9. HTML & CSS FORMATTER / MINIFIER (Pre/Code & Comments Preserved)
+    // =========================================================================
+    const CodeFormatEngine = {
+      beautifyHtml: function(rawHtml) {
+        if (!rawHtml || !rawHtml.trim()) return '';
+
+        // 1. Isolate and preserve <pre> and <code> blocks verbatim
+        const preBlocks = [];
+        let text = rawHtml.replace(/<(pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi, (match) => {
+          preBlocks.push(match);
+          return `___DEVTOOL_PRE_${preBlocks.length - 1}___`;
+        });
+
+        // 2. Void self-closing tags list
+        const voidTags = new Set([
+          'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 
+          'link', 'meta', 'param', 'source', 'track', 'wbr'
+        ]);
+
+        const tokens = text.replace(/>\s*</g, '><').split(/(?=<)|(?<=>)/);
+        let indent = 0;
+        const tab = '  ';
+        const lines = [];
+
+        for (let tok of tokens) {
+          tok = tok.trim();
+          if (!tok) continue;
+
+          // Preserve HTML comment as is
+          if (tok.startsWith('<!--')) {
+            lines.push(tab.repeat(indent) + tok);
+            continue;
+          }
+
+          // Closing tag
+          if (tok.startsWith('</')) {
+            indent = Math.max(0, indent - 1);
+            lines.push(tab.repeat(indent) + tok);
+            continue;
+          }
+
+          // Opening or self-closing tag
+          if (tok.startsWith('<')) {
+            lines.push(tab.repeat(indent) + tok);
+            const isSelfClosing = tok.endsWith('/>');
+            const matchTag = tok.match(/^<([a-zA-Z0-9:-]+)/);
+            const tagName = matchTag ? matchTag[1].toLowerCase() : '';
+            if (!isSelfClosing && tagName && !voidTags.has(tagName) && !tok.includes(`</${tagName}>`)) {
+              indent++;
+            }
+            continue;
+          }
+
+          // Text node
+          lines.push(tab.repeat(indent) + tok);
+        }
+
+        let formatted = lines.join('\n');
+
+        // 3. Restore <pre> and <code> blocks verbatim
+        for (let i = 0; i < preBlocks.length; i++) {
+          formatted = formatted.replace(`___DEVTOOL_PRE_${i}___`, preBlocks[i]);
+        }
+
+        return formatted;
+      },
+
+      beautifyCss: function(rawCss) {
+        if (!rawCss || !rawCss.trim()) return '';
+
+        // 1. Preserve CSS comments and ensure newline separation
+        const comments = [];
+        let css = rawCss.replace(/\/\*[\s\S]*?\*\//g, (match) => {
+          comments.push(match);
+          return `\n___DEVTOOL_CSS_COMMENT_${comments.length - 1}___\n`;
+        });
+
+        // 2. Ensure standard spacing after property colons: property: value
+        css = css.replace(/([a-zA-Z0-9_-]+)\s*:\s*([^;{}]+);/g, '$1: $2;');
+
+        // 3. Format braces, rules and indentation
+        css = css
+          .replace(/\s*\{\s*/g, ' {\n  ')
+          .replace(/;\s*(?!\})/g, ';\n  ')
+          .replace(/;\s*\}/g, ';\n}')
+          .replace(/\s*\}\s*/g, '\n}\n\n');
+
+        // Clean trailing whitespaces on each line
+        css = css.split('\n').map(l => l.trimEnd()).join('\n').trim();
+
+        // 4. Restore comments
+        for (let i = 0; i < comments.length; i++) {
+          css = css.replace(`___DEVTOOL_CSS_COMMENT_${i}___`, comments[i]);
+        }
+
+        return css;
+      },
+
+      minify: function(rawCode) {
+        if (!rawCode || !rawCode.trim()) return '';
+        return rawCode
+          .replace(/\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->/g, '')
+          .replace(/\s+/g, ' ')
+          .replace(/\s*([\{\}:;,>])\s*/g, '$1')
+          .trim();
+      }
+    };
+    window.CodeFormatEngine = CodeFormatEngine;
+
     (function initCodeFormatTool() {
       const input = document.getElementById('codeformat-input');
       const output = document.getElementById('codeformat-output');
@@ -1839,83 +2247,86 @@
       const btnCss = document.getElementById('btn-css-beautify');
       const btnMin = document.getElementById('btn-code-minify');
       const btnCopy = document.getElementById('btn-code-copy');
+      const fileInput = document.getElementById('codeformat-file-input');
+      const btnImport = document.getElementById('btn-codeformat-import');
+      const btnDownload = document.getElementById('btn-codeformat-download');
 
       if (!input || !output) return;
 
-      function beautifyHtml(str) {
-        let formatted = '';
-        let indent = 0;
-        const tab = '  ';
-        const nodes = str.replace(/>\s*</g, '><').split(/(?=<)|(?<=>)/);
-        nodes.forEach(node => {
-          if (!node.trim()) return;
-          if (node.startsWith('</')) {
-            indent = Math.max(0, indent - 1);
-          }
-          formatted += tab.repeat(indent) + node.trim() + '\n';
-          if (node.startsWith('<') && !node.startsWith('</') && !node.endsWith('/>')) {
-            const tagMatch = node.match(/^<([a-zA-Z0-9]+)/);
-            const tag = tagMatch ? tagMatch[1].toLowerCase() : '';
-            const selfClosing = ['input', 'img', 'br', 'hr', 'meta', 'link', 'base', 'area', 'col', 'embed', 'param', 'source', 'track', 'wbr'];
-            if (tag && !selfClosing.includes(tag)) {
-              indent++;
-            }
-          }
-        });
-        return formatted.trim();
-      }
-
-      function beautifyCss(str) {
-        return str
-          .replace(/\s*{\s*/g, ' {\n  ')
-          .replace(/;\s*/g, ';\n  ')
-          .replace(/,\s*/g, ', ')
-          .replace(/\s*}\s*/g, '\n}\n\n')
-          .trim();
-      }
-
-      function minifyCode(str) {
-        return str
-          .replace(/\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->/g, '')
-          .replace(/\s+/g, ' ')
-          .replace(/\s*([\{\}:;,>])\s*/g, '$1')
-          .trim();
-      }
-
       if (btnHtml) {
         btnHtml.addEventListener('click', () => {
-          const val = (input.value || '').trim();
-          if (!val) return;
+          const val = input.value || '';
+          if (!val.trim()) return;
           try {
-            output.value = beautifyHtml(val);
-            status.textContent = 'HTML Formatted';
+            output.value = CodeFormatEngine.beautifyHtml(val);
+            if (status) status.textContent = 'HTML Formatted';
           } catch(e) {
             output.value = val;
-            status.textContent = 'Ready';
+            if (status) status.textContent = 'Error formatting HTML';
           }
         });
       }
 
       if (btnCss) {
         btnCss.addEventListener('click', () => {
-          const val = (input.value || '').trim();
-          if (!val) return;
-          output.value = beautifyCss(val);
-          status.textContent = 'CSS Formatted';
+          const val = input.value || '';
+          if (!val.trim()) return;
+          try {
+            output.value = CodeFormatEngine.beautifyCss(val);
+            if (status) status.textContent = 'CSS Formatted';
+          } catch(e) {
+            output.value = val;
+            if (status) status.textContent = 'Error formatting CSS';
+          }
         });
       }
 
       if (btnMin) {
         btnMin.addEventListener('click', () => {
-          const val = (input.value || '').trim();
-          if (!val) return;
-          output.value = minifyCode(val);
-          status.textContent = 'Minified';
+          const val = input.value || '';
+          if (!val.trim()) return;
+          output.value = CodeFormatEngine.minify(val);
+          if (status) status.textContent = 'Minified';
         });
       }
 
       if (btnCopy) {
         btnCopy.addEventListener('click', () => copyText(output.value, btnCopy));
+      }
+
+      if (btnImport && fileInput) {
+        btnImport.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            input.value = evt.target.result;
+            if (file.name.endsWith('.css')) {
+              output.value = CodeFormatEngine.beautifyCss(input.value);
+              if (status) status.textContent = `CSS Imported (${file.name})`;
+            } else {
+              output.value = CodeFormatEngine.beautifyHtml(input.value);
+              if (status) status.textContent = `HTML Imported (${file.name})`;
+            }
+          };
+          reader.readAsText(file);
+        });
+      }
+
+      if (btnDownload) {
+        btnDownload.addEventListener('click', () => {
+          if (!output.value) return;
+          const isCss = status && status.textContent.toLowerCase().includes('css');
+          const ext = isCss ? 'css' : 'html';
+          const mime = isCss ? 'text/css;charset=utf-8;' : 'text/html;charset=utf-8;';
+          const blob = new Blob([output.value], { type: mime });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `formatted.${ext}`;
+          a.click();
+          URL.revokeObjectURL(a.href);
+        });
       }
     })();
   </script>
