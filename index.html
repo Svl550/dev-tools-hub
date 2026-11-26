@@ -44,28 +44,30 @@
 
   <!-- Header -->
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-xs sm:text-sm text-white shadow-lg shadow-blue-500/20">
           &lt;/&gt;
         </div>
-        <div>
-          <span class="text-lg font-bold tracking-tight text-white">DevToolkit<span class="text-blue-500">Pro</span></span>
+        <div class="truncate">
+          <span class="text-sm sm:text-lg font-bold tracking-tight text-white whitespace-nowrap">DevToolkit<span class="text-blue-500">Pro</span></span>
           <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs rounded bg-blue-900/50 text-blue-300 border border-blue-700/50">100% Client-Side</span>
         </div>
       </div>
       
-      <div class="flex items-center space-x-3">
-        <a href="#tools-section" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
-          Free Tools
+      <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+        <a href="#tools-section" class="px-2 sm:px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition whitespace-nowrap">
+          <span class="hidden sm:inline">Free </span>Tools
         </a>
-        <a href="#premium-section" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm shadow-blue-500/20">
-          ⚡ Premium Products
+        <a href="#premium-section" class="px-2 sm:px-2.5 py-1 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm shadow-blue-500/20 whitespace-nowrap inline-flex items-center space-x-1">
+          <span>⚡</span>
+          <span class="hidden sm:inline"> Premium Products</span>
+          <span class="sm:hidden"> Pro</span>
         </a>
-        <a href="#faq-section" class="hidden sm:inline-block px-2.5 py-1 text-xs text-slate-400 hover:text-slate-200 transition">
+        <a href="#faq-section" class="hidden md:inline-block px-2.5 py-1 text-xs text-slate-400 hover:text-slate-200 transition">
           FAQ &amp; Trust
         </a>
-        <a href="https://github.com/Svl550/awesome-automation-tools" target="_blank" rel="noopener" class="p-2 text-slate-400 hover:text-white transition" aria-label="GitHub">
+        <a href="https://github.com/Svl550/awesome-automation-tools" target="_blank" rel="noopener" class="p-1.5 sm:p-2 text-slate-400 hover:text-white transition" aria-label="GitHub">
           <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         </a>
       </div>
