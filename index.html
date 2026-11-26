@@ -39,6 +39,13 @@
     "description": "Free in-browser developer utilities including JSON formatting, CSV conversion, Base64 encoding, cryptographic hashing, and UUID generation."
   }
   </script>
+  <style>
+    /* WCAG 2.2 AA Focus Visible styling for keyboard navigation */
+    :focus-visible {
+      outline: 2px solid #3b82f6 !important;
+      outline-offset: 2px !important;
+    }
+  </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
 
@@ -118,40 +125,40 @@
     <aside class="lg:col-span-3">
       <div class="sticky top-24 space-y-4">
         <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 px-3">Developer Tools</h2>
-        <nav class="space-y-1" id="tool-nav">
-          <button data-target="tool-json" class="tool-tab-btn active w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+        <nav class="space-y-1" id="tool-nav" role="tablist" aria-label="Developer utilities">
+          <button id="tab-btn-json" role="tab" aria-selected="true" aria-controls="tool-json" data-target="tool-json" class="tool-tab-btn active w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-blue-400">{ }</span>
             <span>JSON Formatter & Validator</span>
           </button>
-          <button data-target="tool-csv" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+          <button id="tab-btn-csv" role="tab" aria-selected="false" aria-controls="tool-csv" data-target="tool-csv" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-emerald-400">📊</span>
             <span>JSON &harr; CSV Converter</span>
           </button>
-          <button data-target="tool-base64" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+          <button id="tab-btn-base64" role="tab" aria-selected="false" aria-controls="tool-base64" data-target="tool-base64" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-amber-400">⚡</span>
             <span>Base64 Encoder / Decoder</span>
           </button>
-          <button data-target="tool-hash" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+          <button id="tab-btn-hash" role="tab" aria-selected="false" aria-controls="tool-hash" data-target="tool-hash" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-purple-400">🔒</span>
             <span>Crypto Hash Generator</span>
           </button>
-          <button data-target="tool-url" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+          <button id="tab-btn-url" role="tab" aria-selected="false" aria-controls="tool-url" data-target="tool-url" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-cyan-400">🔗</span>
             <span>URL & Slug Utility</span>
           </button>
-          <button data-target="tool-uuid" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+          <button id="tab-btn-uuid" role="tab" aria-selected="false" aria-controls="tool-uuid" data-target="tool-uuid" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-rose-400">🎲</span>
             <span>UUID & Key Generator</span>
           </button>
-          <button data-target="tool-saas" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+          <button id="tab-btn-saas" role="tab" aria-selected="false" aria-controls="tool-saas" data-target="tool-saas" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-emerald-400">🌐</span>
             <span>SaaS Startups Directory 2026</span>
           </button>
-          <button data-target="tool-spamshield" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+          <button id="tab-btn-spamshield" role="tab" aria-selected="false" aria-controls="tool-spamshield" data-target="tool-spamshield" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-red-400">🛡️</span>
             <span>Email &amp; Fraud Checker</span>
           </button>
-          <button data-target="tool-codeformat" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
+          <button id="tab-btn-codeformat" role="tab" aria-selected="false" aria-controls="tool-codeformat" data-target="tool-codeformat" class="tool-tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left">
             <span class="text-indigo-400">&lt;/&gt;</span>
             <span>HTML &amp; CSS Formatter</span>
           </button>
@@ -177,117 +184,117 @@
     <section class="lg:col-span-9 space-y-6">
 
       <!-- TOOL 1: JSON Formatter & Validator -->
-      <article id="tool-json" class="tool-card space-y-4">
+      <article id="tool-json" role="tabpanel" aria-labelledby="tab-btn-json" class="tool-card space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <h1 class="text-xl font-bold text-white">JSON Formatter, Validator & Minifier</h1>
             <p class="text-xs text-slate-400">Clean, validate, and minify messy JSON structures safely inside your browser.</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <input type="file" id="json-file-input" accept=".json,application/json" class="hidden">
-            <button id="btn-json-import" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Import File</button>
-            <button id="btn-json-format-2" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">2 Spaces</button>
-            <button id="btn-json-format-4" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">4 Spaces</button>
-            <button id="btn-json-minify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Minify</button>
-            <button id="btn-json-download" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Download</button>
-            <button id="btn-json-copy" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition">Copy</button>
+            <input type="file" id="json-file-input" accept=".json,application/json" class="hidden" aria-label="Import JSON file">
+            <button id="btn-json-import" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Import JSON file">Import File</button>
+            <button id="btn-json-format-2" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Format JSON with 2 spaces indentation">2 Spaces</button>
+            <button id="btn-json-format-4" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Format JSON with 4 spaces indentation">4 Spaces</button>
+            <button id="btn-json-minify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Minify JSON">Minify</button>
+            <button id="btn-json-download" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Download formatted JSON file">Download</button>
+            <button id="btn-json-copy" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition" aria-label="Copy formatted JSON output">Copy</button>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-slate-400">Input JSON</label>
-              <span id="json-size-info" class="text-[11px] text-slate-500 font-mono">0 octet</span>
+              <label for="json-input" class="text-xs font-semibold text-slate-400">Input JSON</label>
+              <span id="json-size-info" class="text-[11px] text-slate-500 font-mono">0 bytes</span>
             </div>
             <textarea id="json-input" rows="16" placeholder='Paste your raw JSON here... e.g. {"name":"Arthur","tools":10}' class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 resize-y"></textarea>
           </div>
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-slate-400">Formatted Output</label>
+              <label for="json-output" class="text-xs font-semibold text-slate-400">Formatted Output</label>
               <span id="json-status" class="text-xs text-slate-500 font-mono">Ready</span>
             </div>
-            <textarea id="json-output" readonly rows="16" placeholder="Formatted or minified output will appear here..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
+            <textarea id="json-output" readonly rows="16" placeholder="Formatted or minified output will appear here..." aria-label="Formatted JSON output" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
           </div>
         </div>
       </article>
 
       <!-- TOOL 2: JSON <-> CSV Converter -->
-      <article id="tool-csv" class="tool-card hidden space-y-4">
+      <article id="tool-csv" role="tabpanel" aria-labelledby="tab-btn-csv" class="tool-card hidden space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <h2 class="text-xl font-bold text-white">JSON to CSV / CSV to JSON Converter</h2>
             <p class="text-xs text-slate-400">Convert array data between JSON and CSV formats with live tabular preview.</p>
           </div>
           <div class="flex items-center space-x-2">
-            <button id="btn-to-csv" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition">Convert to CSV</button>
-            <button id="btn-to-json" class="px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded font-medium transition">Convert to JSON</button>
-            <button id="btn-download-csv" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Download File</button>
+            <button id="btn-to-csv" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition" aria-label="Convert JSON to CSV format">Convert to CSV</button>
+            <button id="btn-to-json" class="px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded font-medium transition" aria-label="Convert CSV to JSON format">Convert to JSON</button>
+            <button id="btn-download-csv" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Download converted CSV or JSON file">Download File</button>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Input Data (JSON Array or Raw CSV)</label>
+            <label for="csv-input" class="block text-xs font-semibold text-slate-400 mb-1">Input Data (JSON Array or Raw CSV)</label>
             <textarea id="csv-input" rows="16" placeholder='[&#10;  {"id": 1, "product": "SpamShield", "price": 14},&#10;  {"id": 2, "product": "SEO Auditor", "price": 9}&#10;]' class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 resize-y"></textarea>
           </div>
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-slate-400">Converted Result</label>
-              <button id="btn-copy-csv" class="text-xs text-blue-400 hover:text-blue-300">Copy output</button>
+              <label for="csv-output" class="text-xs font-semibold text-slate-400">Converted Result</label>
+              <button id="btn-copy-csv" class="inline-flex items-center justify-center min-h-[28px] px-2.5 py-1 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" aria-label="Copy converted CSV or JSON output">Copy output</button>
             </div>
-            <textarea id="csv-output" readonly rows="16" placeholder="Result will appear here..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
+            <textarea id="csv-output" readonly rows="16" placeholder="Result will appear here..." aria-label="Converted CSV or JSON output" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
           </div>
         </div>
       </article>
 
       <!-- TOOL 3: Base64 Encoder / Decoder -->
-      <article id="tool-base64" class="tool-card hidden space-y-4">
+      <article id="tool-base64" role="tabpanel" aria-labelledby="tab-btn-base64" class="tool-card hidden space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <h2 class="text-xl font-bold text-white">Base64 Encoder & Decoder</h2>
             <p class="text-xs text-slate-400">Encode standard text into Base64 or decode Base64 back to readable text (Full UTF-8 & Emoji support).</p>
           </div>
           <div class="flex items-center space-x-2">
-            <button id="btn-b64-encode" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition">Encode</button>
-            <button id="btn-b64-decode" class="px-3 py-1.5 text-xs bg-amber-600 hover:bg-amber-500 text-white rounded font-medium transition">Decode</button>
-            <button id="btn-b64-copy" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Copy</button>
+            <button id="btn-b64-encode" class="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded font-medium transition" aria-label="Encode text to Base64">Encode</button>
+            <button id="btn-b64-decode" class="px-3 py-1.5 text-xs bg-amber-600 hover:bg-amber-500 text-white rounded font-medium transition" aria-label="Decode Base64 to text">Decode</button>
+            <button id="btn-b64-copy" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Copy Base64 output">Copy</button>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <div class="flex justify-between text-xs text-slate-400 mb-1">
-              <label class="font-semibold text-slate-400">Input Text</label>
-              <span id="b64-input-len" class="text-slate-500 text-[11px]">Texte brut ou chaîne Base64</span>
+              <label for="b64-input" class="font-semibold text-slate-400">Input Text</label>
+              <span id="b64-input-len" class="text-slate-500 text-[11px]">Raw text or Base64 string</span>
             </div>
             <textarea id="b64-input" rows="14" placeholder="Enter text or base64 string..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 resize-y"></textarea>
           </div>
           <div>
             <div class="flex justify-between text-xs text-slate-400 mb-1">
-              <label class="font-semibold text-slate-400">Output Result</label>
-              <span id="b64-status-msg" class="text-slate-500 text-[11px]">Prêt</span>
+              <label for="b64-output" class="font-semibold text-slate-400">Output Result</label>
+              <span id="b64-status-msg" class="text-slate-500 text-[11px]">Ready</span>
             </div>
-            <textarea id="b64-output" readonly rows="14" placeholder="Encoded or decoded string..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
+            <textarea id="b64-output" readonly rows="14" placeholder="Encoded or decoded string..." aria-label="Base64 encoded or decoded output" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
           </div>
         </div>
       </article>
 
       <!-- TOOL 4: Hash Generator -->
-      <article id="tool-hash" class="tool-card hidden space-y-4">
+      <article id="tool-hash" role="tabpanel" aria-labelledby="tab-btn-hash" class="tool-card hidden space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <div class="flex items-center space-x-2">
               <h2 class="text-xl font-bold text-white">Cryptographic Hash Generator (SHA-256, SHA-512, SHA-1)</h2>
-              <span id="hash-loading-badge" class="hidden px-2 py-0.5 text-[11px] font-semibold rounded bg-purple-950/80 text-purple-300 border border-purple-800 animate-pulse">Calcul en cours...</span>
+              <span id="hash-loading-badge" class="hidden px-2 py-0.5 text-[11px] font-semibold rounded bg-purple-950/80 text-purple-300 border border-purple-800 animate-pulse">Computing hash...</span>
             </div>
             <p class="text-xs text-slate-400">Compute cryptographic checksums in real-time using standard Web Crypto primitives.</p>
           </div>
           <div class="flex items-center space-x-2">
-            <input type="file" id="hash-file-input" class="hidden">
-            <button id="btn-hash-file" type="button" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition flex items-center space-x-1.5">
+            <input type="file" id="hash-file-input" class="hidden" aria-label="Upload file to compute hashes">
+            <button id="btn-hash-file" type="button" class="inline-flex items-center justify-center min-h-[28px] px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition flex items-center space-x-1.5" aria-label="Upload file to compute cryptographic hashes">
               <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-              <span>Hasher un fichier</span>
+              <span>Upload File to Hash</span>
             </button>
           </div>
         </div>
@@ -295,8 +302,8 @@
         <div class="space-y-4">
           <div>
             <div class="flex justify-between text-xs text-slate-400 mb-1">
-              <label class="font-semibold text-slate-400">Input String ou Fichier</label>
-              <span id="hash-input-info" class="text-slate-500 text-[11px]">Texte brut ou import de fichier direct</span>
+              <label for="hash-input" class="font-semibold text-slate-400">Input String or File</label>
+              <span id="hash-input-info" class="text-slate-500 text-[11px]">Raw text or uploaded file</span>
             </div>
             <textarea id="hash-input" rows="3" placeholder="Type or paste any string to hash..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-purple-500"></textarea>
           </div>
@@ -304,33 +311,33 @@
           <div class="space-y-3">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
-                <span class="font-semibold text-purple-400">SHA-256 (Standard)</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300 font-medium" data-for="out-sha256">Copy</button>
+                <label for="out-sha256" class="font-semibold text-purple-400">SHA-256 (Standard)</label>
+                <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-sha256" aria-label="Copy SHA-256 hash">Copy</button>
               </div>
-              <input type="text" readonly id="out-sha256" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+              <input type="text" readonly id="out-sha256" aria-label="SHA-256 hash output" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
 
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
-                <span class="font-semibold text-purple-400">SHA-512 (High Security)</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300 font-medium" data-for="out-sha512">Copy</button>
+                <label for="out-sha512" class="font-semibold text-purple-400">SHA-512 (High Security)</label>
+                <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-sha512" aria-label="Copy SHA-512 hash">Copy</button>
               </div>
-              <input type="text" readonly id="out-sha512" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+              <input type="text" readonly id="out-sha512" aria-label="SHA-512 hash output" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
 
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
-                <span class="font-semibold text-purple-400">SHA-1 (Legacy)</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300 font-medium" data-for="out-sha1">Copy</button>
+                <label for="out-sha1" class="font-semibold text-purple-400">SHA-1 (Legacy)</label>
+                <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-sha1" aria-label="Copy SHA-1 hash">Copy</button>
               </div>
-              <input type="text" readonly id="out-sha1" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+              <input type="text" readonly id="out-sha1" aria-label="SHA-1 hash output" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
           </div>
         </div>
       </article>
 
       <!-- TOOL 5: URL & Slug Utility -->
-      <article id="tool-url" class="tool-card hidden space-y-4">
+      <article id="tool-url" role="tabpanel" aria-labelledby="tab-btn-url" class="tool-card hidden space-y-4">
         <div class="border-b border-slate-800 pb-3">
           <h2 class="text-xl font-bold text-white">URL Encoder, Decoder & SEO Slug Generator</h2>
           <p class="text-xs text-slate-400">Clean strings for web addresses, encode URI components, or build SEO-friendly slugs.</p>
@@ -338,46 +345,46 @@
 
         <div class="space-y-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Input Text / URL</label>
+            <label for="url-input" class="block text-xs font-semibold text-slate-400 mb-1">Input Text / URL</label>
             <input type="text" id="url-input" placeholder="e.g. My Awesome Automation Tool #2026 / test?q=hello world" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono">
           </div>
 
           <div class="grid grid-cols-1 gap-3">
             <div>
               <div class="flex justify-between text-xs text-slate-400 mb-1">
-                <span class="font-semibold text-cyan-400">SEO URL Slug</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-slug">Copy</button>
+                <label for="out-slug" class="font-semibold text-cyan-400">SEO URL Slug</label>
+                <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-slug" aria-label="Copy SEO URL slug">Copy</button>
               </div>
-              <input type="text" readonly id="out-slug" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+              <input type="text" readonly id="out-slug" aria-label="SEO URL slug output" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
 
             <div>
               <div class="flex justify-between text-xs text-slate-400 mb-1">
-                <span class="font-semibold text-cyan-400">encodeURIComponent (Safe Parameters)</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-url-encode">Copy</button>
+                <label for="out-url-encode" class="font-semibold text-cyan-400">encodeURIComponent (Safe Parameters)</label>
+                <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-url-encode" aria-label="Copy URL-encoded string">Copy</button>
               </div>
-              <input type="text" readonly id="out-url-encode" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+              <input type="text" readonly id="out-url-encode" aria-label="URL-encoded string output" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
 
             <div>
               <div class="flex justify-between text-xs text-slate-400 mb-1">
-                <span class="font-semibold text-cyan-400">decodeURIComponent (Decoded URL)</span>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-url-decode">Copy</button>
+                <label for="out-url-decode" class="font-semibold text-cyan-400">decodeURIComponent (Decoded URL)</label>
+                <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-url-decode" aria-label="Copy decoded URL string">Copy</button>
               </div>
-              <input type="text" readonly id="out-url-decode" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+              <input type="text" readonly id="out-url-decode" aria-label="Decoded URL string output" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
             </div>
           </div>
         </div>
       </article>
 
       <!-- TOOL 6: UUID & Password Generator -->
-      <article id="tool-uuid" class="tool-card hidden space-y-4">
+      <article id="tool-uuid" role="tabpanel" aria-labelledby="tab-btn-uuid" class="tool-card hidden space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <h2 class="text-xl font-bold text-white">UUID v4 & Random Secret Key Generator</h2>
             <p class="text-xs text-slate-400">Generate cryptographically secure random identifiers, API tokens, and passwords.</p>
           </div>
-          <button id="btn-gen-all" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold transition">
+          <button id="btn-gen-all" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold transition" aria-label="Regenerate all identifiers and keys">
             Regenerate All
           </button>
         </div>
@@ -385,18 +392,18 @@
         <div class="space-y-4">
           <div>
             <div class="flex justify-between text-xs text-slate-400 mb-1">
-              <span class="font-semibold text-rose-400">UUID v4 (RFC 4122)</span>
-              <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-uuid">Copy</button>
+              <label for="out-uuid" class="font-semibold text-rose-400">UUID v4 (RFC 4122)</label>
+              <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-uuid" aria-label="Copy UUID v4">Copy</button>
             </div>
-            <input type="text" readonly id="out-uuid" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+            <input type="text" readonly id="out-uuid" aria-label="Generated UUID version 4" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
           </div>
 
           <div>
             <div class="flex justify-between text-xs text-slate-400 mb-1">
-              <span class="font-semibold text-rose-400">32-Byte Hex Token (API Secret Key)</span>
-              <button class="btn-copy-val text-blue-400 hover:text-blue-300" data-for="out-hex-key">Copy</button>
+              <label for="out-hex-key" class="font-semibold text-rose-400">32-Byte Hex Token (API Secret Key)</label>
+              <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-hex-key" aria-label="Copy 32-byte API secret key">Copy</button>
             </div>
-            <input type="text" readonly id="out-hex-key" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
+            <input type="text" readonly id="out-hex-key" aria-label="Generated 32-byte API secret key" class="w-full bg-slate-900/80 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-300">
           </div>
 
           <!-- Strong Password Generator (Unbiased Rejection Sampling) -->
@@ -407,8 +414,8 @@
                 Strong Password (Unbiased Rejection Sampling)
               </span>
               <div class="flex items-center space-x-2">
-                <button id="btn-gen-pwd" type="button" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 transition font-medium">Régénérer</button>
-                <button class="btn-copy-val text-blue-400 hover:text-blue-300 font-medium" data-for="out-password">Copy</button>
+                <button id="btn-gen-pwd" type="button" class="inline-flex items-center justify-center min-h-[28px] text-xs px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 transition font-medium" aria-label="Regenerate secure password">Regenerate</button>
+                <button class="btn-copy-val inline-flex items-center justify-center min-h-[28px] min-w-[28px] px-2 py-0.5 rounded text-xs text-blue-400 hover:text-blue-300 hover:bg-slate-800 font-medium transition" data-for="out-password" aria-label="Copy generated password">Copy</button>
               </div>
             </div>
 
@@ -419,26 +426,26 @@
                   <span>Longueur : <strong id="pwd-len-val" class="text-rose-400 font-mono">24</strong> caractères</span>
                   <span class="text-slate-500 text-[11px]">(8 - 128)</span>
                 </div>
-                <input type="range" id="pwd-len-slider" min="8" max="128" value="24" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
+                <input type="range" id="pwd-len-slider" min="8" max="128" value="24" aria-label="Password length" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
               </div>
 
               <div>
                 <label class="block text-xs text-slate-300 mb-1">Catégories de caractères :</label>
                 <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
                   <label class="flex items-center space-x-1.5 cursor-pointer">
-                    <input type="checkbox" id="pwd-opt-lower" checked class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
+                    <input type="checkbox" id="pwd-opt-lower" checked aria-label="Minuscules (a-z)" class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
                     <span>Minuscules (a-z)</span>
                   </label>
                   <label class="flex items-center space-x-1.5 cursor-pointer">
-                    <input type="checkbox" id="pwd-opt-upper" checked class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
+                    <input type="checkbox" id="pwd-opt-upper" checked aria-label="Majuscules (A-Z)" class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
                     <span>Majuscules (A-Z)</span>
                   </label>
                   <label class="flex items-center space-x-1.5 cursor-pointer">
-                    <input type="checkbox" id="pwd-opt-digits" checked class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
+                    <input type="checkbox" id="pwd-opt-digits" checked aria-label="Chiffres (0-9)" class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
                     <span>Chiffres (0-9)</span>
                   </label>
                   <label class="flex items-center space-x-1.5 cursor-pointer">
-                    <input type="checkbox" id="pwd-opt-symbols" checked class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
+                    <input type="checkbox" id="pwd-opt-symbols" checked aria-label="Symboles (!@#$...)" class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
                     <span>Symboles (!@#$...)</span>
                   </label>
                 </div>
@@ -447,7 +454,7 @@
 
             <!-- Password Output Field -->
             <div>
-              <input type="text" readonly id="out-password" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-rose-500 select-all">
+              <input type="text" readonly id="out-password" aria-label="Generated secure password output" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-rose-500 select-all">
             </div>
 
             <!-- Entropy & Security Bar -->
@@ -469,7 +476,7 @@
       </article>
 
       <!-- TOOL 7: SaaS & AI Startups Directory 2026 (Free Sample) -->
-      <article id="tool-saas" class="tool-card hidden space-y-4">
+      <article id="tool-saas" role="tabpanel" aria-labelledby="tab-btn-saas" class="tool-card hidden space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <div class="flex items-center space-x-2">
@@ -497,17 +504,17 @@
         <!-- Search & Filters -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1">Search Startups or Keywords</label>
+            <label for="saas-search" class="block text-xs font-medium text-slate-400 mb-1">Search Startups or Keywords</label>
             <input type="text" id="saas-search" placeholder="e.g. OpenAI, Developer, France..." class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1">Category Filter</label>
+            <label for="saas-category" class="block text-xs font-medium text-slate-400 mb-1">Category Filter</label>
             <select id="saas-category" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
               <option value="">All Categories (100 sample startups)</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1">Country Filter</label>
+            <label for="saas-country" class="block text-xs font-medium text-slate-400 mb-1">Country Filter</label>
             <select id="saas-country" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
               <option value="">All Countries</option>
             </select>
@@ -546,7 +553,7 @@
       </article>
 
       <!-- TOOL 8: SpamShield Email & Fraud Checker (Live API Demo) -->
-      <article id="tool-spamshield" class="tool-card hidden space-y-4">
+      <article id="tool-spamshield" role="tabpanel" aria-labelledby="tab-btn-spamshield" class="tool-card hidden space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <div class="flex items-center space-x-2">
@@ -574,16 +581,19 @@
         <!-- Input & Controls -->
         <div class="space-y-3">
           <div class="flex flex-col sm:flex-row gap-2">
-            <input type="email" id="spam-email-input" placeholder="Enter an email address to verify (e.g. test@10minutemail.com)" class="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-red-500">
-            <button id="btn-spam-check" class="px-5 py-2.5 text-xs font-semibold bg-red-600 hover:bg-red-500 text-white rounded-lg transition whitespace-nowrap">
+            <div class="flex-1">
+              <label for="spam-email-input" class="sr-only">Email address to verify</label>
+              <input type="email" id="spam-email-input" placeholder="Enter an email address to verify (e.g. test@10minutemail.com)" aria-label="Email address to verify" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-red-500">
+            </div>
+            <button id="btn-spam-check" class="px-5 py-2.5 text-xs font-semibold bg-red-600 hover:bg-red-500 text-white rounded-lg transition whitespace-nowrap" aria-label="Verify email address live">
               Verify Email Live
             </button>
           </div>
           <div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
             <span>Try samples:</span>
-            <button type="button" class="spam-sample-btn px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono transition" data-email="support@google.com">support@google.com</button>
-            <button type="button" class="spam-sample-btn px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono transition" data-email="user@10minutemail.com">user@10minutemail.com</button>
-            <button type="button" class="spam-sample-btn px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono transition" data-email="typo@gmial.com">typo@gmial.com</button>
+            <button type="button" class="spam-sample-btn inline-flex items-center min-h-[28px] px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono transition" data-email="support@google.com" aria-label="Test sample email support@google.com">support@google.com</button>
+            <button type="button" class="spam-sample-btn inline-flex items-center min-h-[28px] px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono transition" data-email="user@10minutemail.com" aria-label="Test sample email user@10minutemail.com">user@10minutemail.com</button>
+            <button type="button" class="spam-sample-btn inline-flex items-center min-h-[28px] px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono transition" data-email="typo@gmial.com" aria-label="Test sample email typo@gmial.com">typo@gmial.com</button>
           </div>
         </div>
 
@@ -615,34 +625,34 @@
       </article>
 
       <!-- TOOL 9: HTML & CSS Formatter / Minifier -->
-      <article id="tool-codeformat" class="tool-card hidden space-y-4">
+      <article id="tool-codeformat" role="tabpanel" aria-labelledby="tab-btn-codeformat" class="tool-card hidden space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
             <h1 class="text-xl font-bold text-white">HTML &amp; CSS Formatter &amp; Minifier</h1>
             <p class="text-xs text-slate-400">Beautify or minify messy HTML markup and CSS stylesheets instantly with zero server transmission.</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <input type="file" id="codeformat-file-input" accept=".html,.htm,.css" class="hidden">
-            <button id="btn-codeformat-import" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Import File</button>
-            <button id="btn-html-beautify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Beautify HTML</button>
-            <button id="btn-css-beautify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Beautify CSS</button>
-            <button id="btn-code-minify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Minify</button>
-            <button id="btn-codeformat-download" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition">Download</button>
-            <button id="btn-code-copy" class="px-3 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-500 text-white rounded font-medium transition">Copy</button>
+            <input type="file" id="codeformat-file-input" accept=".html,.htm,.css" class="hidden" aria-label="Upload HTML or CSS file to format">
+            <button id="btn-codeformat-import" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Import HTML or CSS file">Import File</button>
+            <button id="btn-html-beautify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Beautify HTML code">Beautify HTML</button>
+            <button id="btn-css-beautify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Beautify CSS code">Beautify CSS</button>
+            <button id="btn-code-minify" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Minify HTML or CSS code">Minify</button>
+            <button id="btn-codeformat-download" type="button" class="px-2.5 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium border border-slate-700 transition" aria-label="Download formatted code">Download</button>
+            <button id="btn-code-copy" class="px-3 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-500 text-white rounded font-medium transition" aria-label="Copy formatted code">Copy</button>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Input Code</label>
+            <label for="codeformat-input" class="block text-xs font-semibold text-slate-400 mb-1">Input Code</label>
             <textarea id="codeformat-input" rows="16" placeholder="Paste your raw HTML or CSS code here..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-indigo-500 resize-y"></textarea>
           </div>
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-slate-400">Formatted Output</label>
+              <label for="codeformat-output" class="text-xs font-semibold text-slate-400">Formatted Output</label>
               <span id="codeformat-status" class="text-xs text-slate-500 font-mono">Ready</span>
             </div>
-            <textarea id="codeformat-output" readonly rows="16" placeholder="Clean formatted code will appear here..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
+            <textarea id="codeformat-output" readonly rows="16" placeholder="Clean formatted code will appear here..." aria-label="Formatted or minified code output" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none resize-y"></textarea>
           </div>
         </div>
       </article>
@@ -1041,7 +1051,7 @@
     function updateJsonSize() {
       if (!jsonSizeInfo || !jsonInput) return;
       const bytes = new TextEncoder().encode(jsonInput.value).length;
-      jsonSizeInfo.textContent = bytes > 1024 ? (bytes / 1024).toFixed(1) + ' Ko' : bytes + ' octets';
+      jsonSizeInfo.textContent = bytes > 1024 ? (bytes / 1024).toFixed(1) + ' KB' : bytes + ' bytes';
     }
 
     function formatJSON(space) {
