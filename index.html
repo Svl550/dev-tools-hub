@@ -3,26 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://spamshield-api-8kdt.onrender.com; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self' https://ko-fi.com https://gumroad.com;">
   <title>DevToolkit Pro | Developer Utilities, SaaS Startups Directory 2026 & Email Fraud Checker</title>
   <meta name="description" content="Free in-browser developer utilities: JSON formatter, JSON to CSV converter, Base64 encoder, SHA256 generator, Global SaaS Startups Directory 2026, and live Disposable Email & Fraud Checker API.">
   <meta name="keywords" content="json formatter online, json to csv, base64 encoder decoder, sha256 generator, saas startups directory 2026, tech companies database, disposable email checker, anti-fraud api, developer tools">
-  <meta property="og:title" content="DevToolkit Pro - Developer Utilities, SaaS Directory 2026 & Email Checker">
-  <meta property="og:description" content="Instant browser-side developer utilities, 2026 SaaS startups directory, and live email fraud verification.">
-  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="canonical" href="https://svl550.github.io/dev-tools-hub/">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
-          }
-        }
-      }
-    };
-  </script>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://svl550.github.io/dev-tools-hub/">
+  <meta property="og:title" content="DevToolkit Pro | Fast, Private, Offline-Ready Developer Utilities">
+  <meta property="og:description" content="9 high-performance developer tools in one privacy-first web app. JSON Formatter, Base64, Hash Generator, Password Generator, SaaS Directory, and more.">
+  <meta property="og:image" content="https://svl550.github.io/dev-tools-hub/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://svl550.github.io/dev-tools-hub/">
+  <meta name="twitter:title" content="DevToolkit Pro | Fast, Private, Offline-Ready Developer Utilities">
+  <meta name="twitter:description" content="9 high-performance developer tools in one privacy-first web app. 100% client-side, zero data collection.">
+  <meta name="twitter:image" content="https://svl550.github.io/dev-tools-hub/og-image.png">
+
+  <!-- Precompiled & Minified Tailwind CSS -->
+  <link rel="stylesheet" href="styles.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -174,7 +179,7 @@
             Automate data scraping, PDF generation, SEO audits, and email verification with offline CLI scripts.
           </p>
           <a href="https://ko-fi.com/s/05e0bbb484" target="_blank" rel="noopener" class="block w-full py-2 px-3 text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition">
-            Get Complete 10-Tool Bundle ($39)
+            Get Complete 10-Tool Bundle ($24 Launch Price)
           </a>
         </div>
       </div>
@@ -498,7 +503,7 @@
             <span class="text-slate-300 ml-1">Get verified tech stacks, direct executive LinkedIn profiles, funding amounts, and weekly auto-sync.</span>
           </div>
           <a href="https://ko-fi.com/s/9df9ae5778" target="_blank" rel="noopener" class="whitespace-nowrap px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white font-semibold rounded transition">
-            Get Complete Dataset ($29)
+            Get Complete Dataset ($19)
           </a>
         </div>
 
@@ -1643,7 +1648,10 @@
 
     if (hashInput) {
       hashInput.addEventListener('input', () => {
-        if (hashInputInfo) hashInputInfo.textContent = 'Texte brut direct';
+        if (hashInputInfo) {
+          hashInputInfo.textContent = 'Direct raw text';
+          hashInputInfo.className = 'text-slate-500 text-[11px]';
+        }
         triggerHashComputation(hashInput.value, false);
       });
     }
@@ -1654,15 +1662,32 @@
         const file = e.target.files && e.target.files[0];
         if (!file) return;
 
-        const sizeFormatted = file.size > 1048576 
-          ? (file.size / 1048576).toFixed(2) + ' Mo' 
-          : (file.size / 1024).toFixed(1) + ' Ko';
+        // Size limit guardrail: 100 MB max (104,857,600 bytes)
+        const MAX_FILE_SIZE = 100 * 1024 * 1024;
+        if (file.size > MAX_FILE_SIZE) {
+          const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+          const limitMsg = `File size exceeds the 100 MB limit (${sizeMb} MB). Maximum allowed file size is 100 MB.`;
+          if (hashInputInfo) {
+            hashInputInfo.textContent = limitMsg;
+            hashInputInfo.className = 'text-rose-400 text-[11px] font-semibold';
+          }
+          if (hashInput) {
+            hashInput.value = `[Rejected: ${file.name} (${sizeMb} MB) exceeds maximum allowed size of 100 MB]`;
+          }
+          hashFileInput.value = '';
+          return;
+        }
+
+        const sizeFormatted = file.size >= 1048576 
+          ? (file.size / 1048576).toFixed(2) + ' MB' 
+          : (file.size / 1024).toFixed(1) + ' KB';
         
         if (hashInputInfo) {
-          hashInputInfo.textContent = `Fichier : ${file.name} (${sizeFormatted})`;
+          hashInputInfo.textContent = `File: ${file.name} (${sizeFormatted})`;
+          hashInputInfo.className = 'text-slate-500 text-[11px]';
         }
         if (hashInput) {
-          hashInput.value = `[Fichier sélectionné : ${file.name} (${sizeFormatted})]`;
+          hashInput.value = `[Selected file: ${file.name} (${sizeFormatted})]`;
         }
 
         const reader = new FileReader();
@@ -1670,7 +1695,10 @@
           triggerHashComputation(evt.target.result, true);
         };
         reader.onerror = function() {
-          if (hashInputInfo) hashInputInfo.textContent = 'Erreur de lecture du fichier.';
+          if (hashInputInfo) {
+            hashInputInfo.textContent = 'File read error.';
+            hashInputInfo.className = 'text-rose-400 text-[11px] font-semibold';
+          }
         };
         reader.readAsArrayBuffer(file);
       });

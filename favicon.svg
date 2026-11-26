@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <!-- Background with subtle border -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="2.5"/>
+  
+  <!-- Outer Glow / Accent Line -->
+  <path d="M12 16 Q 16 12 24 12" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+  
+  <!-- Left Bracket { -->
+  <path d="M 22 20 C 18 20 16 23 16 27 C 16 30 14 31 12 32 C 14 33 16 34 16 37 C 16 41 18 44 22 44" 
+        stroke="url(#brandGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Right Bracket } -->
+  <path d="M 42 20 C 46 20 48 23 48 27 C 48 30 50 31 52 32 C 50 33 48 34 48 37 C 48 41 46 44 42 44" 
+        stroke="url(#brandGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Central Slash / Spark -->
+  <path d="M 35 21 L 29 43" 
+        stroke="url(#accentGrad)" stroke-width="3" stroke-linecap="round"/>
+        
+  <!-- Core Dev Dot -->
+  <circle cx="32" cy="32" r="2.5" fill="#f43f5e"/>
+</svg>
