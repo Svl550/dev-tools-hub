@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Content Security Policy (Meta-tag Implementation):
+       - default-src 'self': Restricts fallback resource origins to own domain.
+       - script-src 'self' 'unsafe-inline': Permits local scripts (startups-data.js) and application inline scripts; eliminates 'unsafe-eval' thanks to precompiled Tailwind CSS. Note: 'unsafe-inline' allows inline script execution and does not protect against DOM/inline XSS.
+       - style-src 'self' 'unsafe-inline': Permits local styles.css and inline style blocks.
+       - img-src 'self' data: https:: Permits local, data URI, and HTTPS images.
+       - connect-src 'self' https://spamshield-api-8kdt.onrender.com: Authorizes SpamShield email verification fetch API.
+       - font-src 'self' data:: Permits system and data fonts.
+       - object-src 'none': Disallows plugins.
+       - base-uri 'self': Prevents <base> hijacking.
+       - form-action 'self' https://ko-fi.com https://gumroad.com: Restricts HTML <form action="..."> targets (note: does not restrict standard <a href> navigation).
+       * Note on GitHub Pages limitation: Meta tags cannot enforce 'frame-ancestors', 'report-uri', or 'sandbox'. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://spamshield-api-8kdt.onrender.com; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self' https://ko-fi.com https://gumroad.com;">
   <title>DevToolkit Pro | Developer Utilities, SaaS Startups Directory 2026 & Email Fraud Checker</title>
   <meta name="description" content="Free in-browser developer utilities: JSON formatter, JSON to CSV converter, Base64 encoder, SHA256 generator, Global SaaS Startups Directory 2026, and live Disposable Email & Fraud Checker API.">
@@ -569,7 +580,7 @@
             <p class="text-xs text-slate-400">Real-time email syntax, MX record, typo detection, and disposable burner domain verification powered by SpamShield API.</p>
           </div>
           <a href="https://ko-fi.com/s/fda9dadd03" target="_blank" rel="noopener" class="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-600 hover:bg-red-500 text-white transition shadow-sm">
-            <span>Get Pro API Key ($29) &rarr;</span>
+            <span>Get Pro API Key ($19) &rarr;</span>
           </a>
         </div>
 
