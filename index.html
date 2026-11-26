@@ -1622,8 +1622,11 @@
           text = text.replaceAll(lig, rep);
         }
 
-        // 2. Unicode normalization (NFD separates accents from base characters)
-        text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        // 2. Unicode normalization: strip diacritics for Latin script while preserving constitutive Cyrillic letters (й, ё, etc.)
+        text = text
+          .normalize('NFD')
+          .replace(/(?<=\p{Script=Latin})[\u0300-\u036f]+/gu, '')
+          .normalize('NFC');
 
         // 3. Convert apostrophes to space for clean French SEO slugs (d'outils -> d-outils)
         text = text.replace(/['’]/g, ' ');
