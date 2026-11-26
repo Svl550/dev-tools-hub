@@ -422,29 +422,29 @@
             <!-- Configuration controls -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
               <div>
-                <div class="flex justify-between text-xs text-slate-300 mb-1">
+                <label for="pwd-len-slider" class="flex justify-between text-xs text-slate-300 mb-1 cursor-pointer">
                   <span>Longueur : <strong id="pwd-len-val" class="text-rose-400 font-mono">24</strong> caractères</span>
                   <span class="text-slate-500 text-[11px]">(8 - 128)</span>
-                </div>
+                </label>
                 <input type="range" id="pwd-len-slider" min="8" max="128" value="24" aria-label="Password length" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
               </div>
 
               <div>
-                <label class="block text-xs text-slate-300 mb-1">Catégories de caractères :</label>
+                <span class="block text-xs text-slate-300 mb-1">Catégories de caractères :</span>
                 <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
-                  <label class="flex items-center space-x-1.5 cursor-pointer">
+                  <label for="pwd-opt-lower" class="flex items-center space-x-1.5 cursor-pointer">
                     <input type="checkbox" id="pwd-opt-lower" checked aria-label="Minuscules (a-z)" class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
                     <span>Minuscules (a-z)</span>
                   </label>
-                  <label class="flex items-center space-x-1.5 cursor-pointer">
+                  <label for="pwd-opt-upper" class="flex items-center space-x-1.5 cursor-pointer">
                     <input type="checkbox" id="pwd-opt-upper" checked aria-label="Majuscules (A-Z)" class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
                     <span>Majuscules (A-Z)</span>
                   </label>
-                  <label class="flex items-center space-x-1.5 cursor-pointer">
+                  <label for="pwd-opt-digits" class="flex items-center space-x-1.5 cursor-pointer">
                     <input type="checkbox" id="pwd-opt-digits" checked aria-label="Chiffres (0-9)" class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
                     <span>Chiffres (0-9)</span>
                   </label>
-                  <label class="flex items-center space-x-1.5 cursor-pointer">
+                  <label for="pwd-opt-symbols" class="flex items-center space-x-1.5 cursor-pointer">
                     <input type="checkbox" id="pwd-opt-symbols" checked aria-label="Symboles (!@#$...)" class="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0">
                     <span>Symboles (!@#$...)</span>
                   </label>
@@ -454,6 +454,7 @@
 
             <!-- Password Output Field -->
             <div>
+              <label for="out-password" class="sr-only">Generated secure password</label>
               <input type="text" readonly id="out-password" aria-label="Generated secure password output" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-rose-500 select-all">
             </div>
 
@@ -613,13 +614,13 @@
         <div class="p-3 bg-slate-900/70 border border-slate-800 rounded-lg space-y-1.5 text-[11px] text-slate-400">
           <div class="flex items-center space-x-1.5 text-slate-300 font-semibold">
             <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Confidentialité &amp; Limites du service</span>
+            <span>Privacy &amp; Service Verification Limits</span>
           </div>
           <p>
-            <strong>Transmission externe :</strong> Votre adresse email est transmise de manière sécurisée via HTTPS au service tiers <span class="font-mono text-slate-300">SpamShield API (Render Cloud)</span> pour analyse syntaxique, vérification des serveurs DNS MX et détection de domaines jetables. Aucune donnée n'est stockée ni cédée à des tiers.
+            <strong>External HTTPS Transmission:</strong> Your queried email address is transmitted securely via HTTPS to the third-party <span class="font-mono text-slate-300">SpamShield API (Render Cloud)</span> for RFC syntax analysis, DNS MX record resolution, and disposable burner domain detection. No personal data is stored, logged, or shared with third parties.
           </p>
           <p class="text-slate-400">
-            <strong>Limites techniques :</strong> Cette vérification contrôle la conformité RFC et la validité du domaine hébergeur. Elle ne constitue <em>en aucun cas une garantie absolue d'existence ou de délivrabilité d'une boîte aux lettres spécifique</em> (aucun ping SMTP intrusif n'est réalisé afin de respecter la vie privée des serveurs de messagerie).
+            <strong>Technical Limitations:</strong> This check validates RFC syntax compliance, domain typo risks, and active mail exchanger (MX) infrastructure. It does <em>not guarantee the individual mailbox exists or can receive mail</em> (no intrusive SMTP handshake or VRFY ping is performed, preserving mail server privacy and anti-spam etiquette).
           </p>
         </div>
       </article>
