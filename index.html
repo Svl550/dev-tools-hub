@@ -25,8 +25,8 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://svl550.github.io/dev-tools-hub/">
   <meta property="og:title" content="DevToolkit Pro | Fast, Private, Offline-Ready Developer Utilities">
-  <meta property="og:description" content="9 high-performance developer tools in one privacy-first web app. JSON Formatter, Base64, Hash Generator, Password Generator, SaaS Directory, and more.">
-  <meta property="og:image" content="https://svl550.github.io/dev-tools-hub/og-image.png">
+  <meta property="og:description" content="9 high-performance developer tools in one web app. Local tools run 100% client-side with zero data collection; SpamShield connects to an external fraud verification API.">
+  <meta property="og:image" content="https://svl550.github.io/dev-tools-hub/og-image.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
 
@@ -34,8 +34,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://svl550.github.io/dev-tools-hub/">
   <meta name="twitter:title" content="DevToolkit Pro | Fast, Private, Offline-Ready Developer Utilities">
-  <meta name="twitter:description" content="9 high-performance developer tools in one privacy-first web app. 100% client-side, zero data collection.">
-  <meta name="twitter:image" content="https://svl550.github.io/dev-tools-hub/og-image.png">
+  <meta name="twitter:description" content="9 high-performance developer tools in one web app. Local tools run 100% client-side with zero data collection; SpamShield connects to an external fraud verification API.">
+  <meta name="twitter:image" content="https://svl550.github.io/dev-tools-hub/og-image.png?v=2">
 
   <!-- Precompiled & Minified Tailwind CSS -->
   <link rel="stylesheet" href="styles.css">
@@ -74,7 +74,7 @@
         </div>
         <div class="truncate">
           <span class="text-sm sm:text-lg font-bold tracking-tight text-white whitespace-nowrap">DevToolkit<span class="text-blue-500">Pro</span></span>
-          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs rounded bg-blue-900/50 text-blue-300 border border-blue-700/50">100% Client-Side</span>
+          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs rounded bg-blue-900/50 text-blue-300 border border-blue-700/50">Local &amp; Private</span>
         </div>
       </div>
       
@@ -110,7 +110,7 @@
     <div class="max-w-5xl mx-auto text-center space-y-4">
       <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-800/50 text-blue-300 text-xs font-medium">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>100% Client-Side Privacy &bull; Zero Server Storage &bull; Open Source Engine</span>
+        <span>Local In-Browser Execution &bull; Zero Remote Storage on Local Tools &bull; Open Source Engine</span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white max-w-3xl mx-auto leading-tight">
         Everything Developers Need. <br class="hidden sm:inline"><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400">In One Place.</span>
@@ -579,9 +579,14 @@
             </div>
             <p class="text-xs text-slate-400">Real-time email syntax, MX record, typo detection, and disposable burner domain verification powered by SpamShield API.</p>
           </div>
-          <a href="https://ko-fi.com/s/fda9dadd03" target="_blank" rel="noopener" class="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-600 hover:bg-red-500 text-white transition shadow-sm">
-            <span>Get Pro API Key ($19) &rarr;</span>
-          </a>
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <a href="https://svl.gumroad.com/l/ciupmk?layout=profile" target="_blank" rel="noopener" class="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-600 hover:bg-red-500 text-white transition shadow-sm">
+              <span>Get Pro API Key ($19) &rarr;</span>
+            </a>
+            <a href="https://ko-fi.com/s/fda9dadd03" target="_blank" rel="noopener" class="inline-flex items-center space-x-1 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+              <span>Ko-fi</span>
+            </a>
+          </div>
         </div>
 
         <!-- Banner Upsell -->
@@ -796,10 +801,13 @@
             </ul>
           </div>
           <div class="space-y-2 pt-4">
-            <a href="https://ko-fi.com/s/fda9dadd03" target="_blank" rel="noopener" class="block w-full py-2.5 px-4 text-center text-xs font-bold rounded-lg bg-red-600 hover:bg-red-500 text-white transition shadow-lg shadow-red-600/20">
-              Get Pro API Key ($19) &rarr;
+            <a href="https://svl.gumroad.com/l/ciupmk?layout=profile" target="_blank" rel="noopener" class="block w-full py-2.5 px-4 text-center text-xs font-bold rounded-lg bg-red-600 hover:bg-red-500 text-white transition shadow-lg shadow-red-600/20">
+              Get Pro API Key on Gumroad ($19) &rarr;
             </a>
-            <a href="https://spamshield-api-8kdt.onrender.com/docs" target="_blank" rel="noopener" class="block w-full py-1.5 px-4 text-center text-[11px] text-slate-400 hover:text-slate-200 transition">
+            <a href="https://ko-fi.com/s/fda9dadd03" target="_blank" rel="noopener" class="block w-full py-1.5 px-4 text-center text-[11px] text-slate-400 hover:text-slate-200 transition">
+              Secondary checkout via Ko-fi ($19) &rarr;
+            </a>
+            <a href="https://spamshield-api-8kdt.onrender.com/docs" target="_blank" rel="noopener" class="block w-full py-1 px-4 text-center text-[11px] text-slate-500 hover:text-slate-200 transition">
               Explore live Swagger documentation &rarr;
             </a>
           </div>
